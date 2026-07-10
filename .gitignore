@@ -9,6 +9,27 @@ Desktop.ini
 .idea/
 .gemini/
 
-# Database lock files / temp
+# Logs & Temp files
 *.log
 *.tmp
+error_log
+
+# Environment and local configs
+.env
+.env.local
+config/config.local.php
+
+# Backups
+*.bak
+*.sql.gz
+*.zip
+*.tar.gz
+backup/
+backups/
+
+# User Uploaded Data
+assets/uploads/profile/*
+!assets/uploads/profile/default.png
+assets/uploads/eskul/*
+!assets/uploads/eskul/default_eskul.png
+!assets/uploads/eskul/default_eskul.jpg

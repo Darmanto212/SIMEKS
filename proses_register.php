@@ -25,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('Pendaftaran Berhasil! Silakan Login.'); window.location='login.php';</script>";
         exit();
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        error_log("Registration error: " . $e->getMessage());
+        echo "<script>alert('Terjadi kesalahan pada sistem. Silakan coba lagi.'); window.location='register.php';</script>";
+        exit();
     }
 }
 ?>
