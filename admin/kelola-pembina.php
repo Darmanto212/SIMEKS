@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $type = "danger";
             } else {
                 $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $koneksi->prepare("INSERT INTO users (nama, email, password, role, foto) VALUES (?, ?, ?, 'pembina', 'default.png')");
+                $stmt = $koneksi->prepare("INSERT INTO users (nama, email, password, role, status, needs_password_change, foto) VALUES (?, ?, ?, 'pembina', 'aktif', 1, 'default.png')");
                 $stmt->execute([$nama, $email, $pass_hash]);
                 log_activity($koneksi, 'Tambah Pembina', "Nama: $nama, Email: $email", 'SUKSES');
                 $msg = "Pembina baru berhasil ditambahkan!";
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 if (!empty($password)) {
                     $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $koneksi->prepare("UPDATE users SET nama = ?, email = ?, password = ? WHERE id = ?");
+                    $stmt = $koneksi->prepare("UPDATE users SET nama = ?, email = ?, password = ?, needs_password_change = 1 WHERE id = ?");
                     $stmt->execute([$nama, $email, $pass_hash, $id]);
                 } else {
                     $stmt = $koneksi->prepare("UPDATE users SET nama = ?, email = ? WHERE id = ?");

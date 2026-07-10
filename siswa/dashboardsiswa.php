@@ -1,6 +1,4 @@
-<?php 
-session_start();
-require_once '../includes/auth_check.php';
+<?php require_once '../includes/auth_check.php';
 check_auth('siswa');
 
 $pageTitle = "Dashboard Siswa - SIMEKS";

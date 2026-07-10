@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         if ($_POST['action'] === 'add' && $is_admin) {
             $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $stmt = $koneksi->prepare("INSERT INTO users (nama, nisn, email, password, kelas, role) VALUES (?, ?, ?, ?, ?, 'siswa')");
+            $stmt = $koneksi->prepare("INSERT INTO users (nama, nisn, email, password, kelas, role, status, needs_password_change) VALUES (?, ?, ?, ?, ?, 'siswa', 'aktif', 1)");
             $stmt->execute([$_POST['nama'], $_POST['nisn'], $_POST['email'], $pass, $_POST['kelas']]);
             log_activity($koneksi, 'Tambah Siswa', 'Nama: ' . $_POST['nama'], 'SUKSES');
         } elseif ($_POST['action'] === 'edit') {

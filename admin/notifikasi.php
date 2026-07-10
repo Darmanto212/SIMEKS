@@ -1,6 +1,4 @@
-<?php 
-session_start();
-require_once '../includes/auth_check.php';
+<?php require_once '../includes/auth_check.php';
 check_auth('admin');
 
 // Only allow Admin Master to access this page

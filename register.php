@@ -20,6 +20,14 @@ include 'includes/header.php';
                         <form action="proses_register.php" method="POST">
                             <div class="row g-3 mb-4">
                                 <div class="col-md-12">
+                                    <label for="nisn" class="form-label fw-semibold">NISN (Harus sudah terdaftar oleh Admin)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-id-badge"></i></span>
+                                        <input type="text" class="form-control bg-light border-0 py-3 ps-2" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
                                     <label for="nama" class="form-label fw-semibold">Nama Lengkap</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-id-card"></i></span>
@@ -27,27 +35,27 @@ include 'includes/header.php';
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6">
-                                    <label for="username" class="form-label fw-semibold">Username</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-user"></i></span>
-                                        <input type="text" class="form-control bg-light border-0 py-3 ps-2" id="username" name="username" placeholder="Username" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <label for="nisn" class="form-label fw-semibold">NISN</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-id-badge"></i></span>
-                                        <input type="text" class="form-control bg-light border-0 py-3 ps-2" id="nisn" name="nisn" placeholder="Nomor NISN" required>
-                                    </div>
-                                </div>
-                                
                                 <div class="col-md-12">
-                                    <label for="password" class="form-label fw-semibold">Password</label>
+                                    <label for="email" class="form-label fw-semibold">Alamat Email Asli</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" class="form-control bg-light border-0 py-3 ps-2" id="email" name="email" placeholder="contoh@email.com" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="password" class="form-label fw-semibold">Password Baru</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-lock"></i></span>
-                                        <input type="password" class="form-control bg-light border-0 py-3 ps-2" id="password" name="password" placeholder="Buat password minimal 8 karakter" required>
+                                        <input type="password" class="form-control bg-light border-0 py-3 ps-2" id="password" name="password" placeholder="Min. 8 karakter" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="confirm_password" class="form-label fw-semibold">Konfirmasi Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fas fa-lock"></i></span>
+                                        <input type="password" class="form-control bg-light border-0 py-3 ps-2" id="confirm_password" name="confirm_password" placeholder="Ulangi password" required>
                                     </div>
                                 </div>
                             </div>

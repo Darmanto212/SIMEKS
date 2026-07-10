@@ -30,9 +30,9 @@
             </div>
 
             <div class="d-none d-md-block border-start ps-3 ms-2">
-                <span class="small text-muted"><?php echo isset($_SESSION['master_data']) ? 'Master Administrator' : 'Administrator'; ?></span>
+                <span class="small text-muted"><?php echo ($_SESSION['role'] === 'admin') ? 'Administrator' : 'Pembina'; ?></span>
                 <span class="small fw-bold d-block text-maroon"><?php
-                                                                echo htmlspecialchars($_SESSION['master_data']['nama'] ?? $_SESSION['admin_data']['nama'] ?? 'Admin');
+                                                                echo htmlspecialchars($_SESSION['nama'] ?? 'Admin');
                                                                 ?></span>
             </div>
         </div>

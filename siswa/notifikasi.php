@@ -1,6 +1,4 @@
-<?php
-session_start();
-require_once '../includes/auth_check.php';
+<?php require_once '../includes/auth_check.php';
 check_auth('siswa');
 
 $user_id = $_SESSION['siswa_data']['user_id'];

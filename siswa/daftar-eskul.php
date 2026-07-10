@@ -1,6 +1,4 @@
-<?php 
-session_start();
-$pageTitle = "Pilih Ekskul - SIMEKS";
+<?php $pageTitle = "Pilih Ekskul - SIMEKS";
 include '../config/koneksi.php'; 
 
 require_once '../includes/auth_check.php';

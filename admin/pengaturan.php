@@ -1,6 +1,4 @@
-<?php 
-session_start();
-require_once '../includes/auth_check.php';
+<?php require_once '../includes/auth_check.php';
 check_auth('admin');
 
 $pageTitle = "Pengaturan - SIMEKS";
@@ -36,10 +34,14 @@ if (isset($_POST['change_password'])) {
     $admin = $stmt->fetch();
     
     if (password_verify($current, $admin->password)) {
-        if ($new === $confirm) {
+        if (strlen($new) < 8) {
+            $msg = "Password baru minimal harus 8 karakter!";
+            $type = "danger";
+        } elseif ($new === $confirm) {
             $hashed = password_hash($new, PASSWORD_DEFAULT);
-            $stmt = $koneksi->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt = $koneksi->prepare("UPDATE users SET password = ?, needs_password_change = 0 WHERE id = ?");
             $stmt->execute([$hashed, $admin_id]);
+            $_SESSION['needs_password_change'] = 0;
             $msg = "Password berhasil diubah!";
             $type = "success";
         } else {
@@ -57,6 +59,10 @@ $stmt = $koneksi->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$admin_id]);
 $admin = $stmt->fetch();
 
+if (isset($_GET['force_change'])) {
+    $msg = "Demi keamanan, Anda wajib mengubah password bawaan dari Admin terlebih dahulu.";
+    $type = "danger";
+}
 ?>
 
 <div class="d-flex" id="wrapper">

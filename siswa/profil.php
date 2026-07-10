@@ -1,6 +1,4 @@
-<?php 
-session_start();
-require_once '../includes/auth_check.php';
+<?php require_once '../includes/auth_check.php';
 check_auth('siswa');
 
 $pageTitle = "Profil Saya - SIMEKS";
@@ -61,15 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_pass = $_POST['new_password'];
     $confirm_pass = $_POST['confirm_password'];
 
-    $stmt = $koneksi->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt = $koneksi->prepare("SELECT password, nisn FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
-    $current_hash = $stmt->fetchColumn();
+    $user_row = $stmt->fetch();
 
-    if (password_verify($old_pass, $current_hash)) {
-        if ($new_pass === $confirm_pass) {
+    if (password_verify($old_pass, $user_row->password)) {
+        if (strlen($new_pass) < 8) {
+            $error_msg = "Password baru minimal harus 8 karakter.";
+        } elseif ($new_pass === $user_row->nisn) {
+            $error_msg = "Password baru tidak boleh sama dengan NISN Anda.";
+        } elseif ($new_pass === $confirm_pass) {
             $new_hash = password_hash($new_pass, PASSWORD_DEFAULT);
-            $stmt = $koneksi->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt = $koneksi->prepare("UPDATE users SET password = ?, needs_password_change = 0 WHERE id = ?");
             $stmt->execute([$new_hash, $user_id]);
+            $_SESSION['needs_password_change'] = 0;
             $success_msg = "Password berhasil diubah!";
             log_activity($koneksi, 'Ganti Password', 'Siswa mengubah password akun', 'SECURITY');
         } else {
@@ -93,6 +96,9 @@ $total_diterima = $stmt->fetchColumn();
 $stmt = $koneksi->prepare("SELECT COUNT(*) FROM pendaftaran WHERE user_id = ? AND status = 'menunggu'");
 $stmt->execute([$user_id]);
 $total_menunggu = $stmt->fetchColumn();
+if (isset($_GET['force_change'])) {
+    $error_msg = "Demi keamanan, Anda wajib mengubah password bawaan dari Admin terlebih dahulu.";
+}
 ?>
 
 <div class="d-flex" id="wrapper">

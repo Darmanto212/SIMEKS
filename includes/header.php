@@ -39,15 +39,10 @@ $notif_count = 0;
 $isAdminPage = (stripos($current_path, '/admin/') !== false);
 $isSiswaPage = (stripos($current_path, '/siswa/') !== false);
 
-if ($isAdminPage && isset($_SESSION['admin_data'])) {
+if (isset($_SESSION['user_id'])) {
     include_once __DIR__ . '/../config/koneksi.php';
     $stmt_notif = $koneksi->prepare("SELECT COUNT(*) FROM notifikasi WHERE user_id = ? AND is_read = 0");
-    $stmt_notif->execute([$_SESSION['admin_data']['user_id']]);
-    $notif_count = $stmt_notif->fetchColumn();
-} elseif ($isSiswaPage && isset($_SESSION['siswa_data'])) {
-    include_once __DIR__ . '/../config/koneksi.php';
-    $stmt_notif = $koneksi->prepare("SELECT COUNT(*) FROM notifikasi WHERE user_id = ? AND is_read = 0");
-    $stmt_notif->execute([$_SESSION['siswa_data']['user_id']]);
+    $stmt_notif->execute([$_SESSION['user_id']]);
     $notif_count = $stmt_notif->fetchColumn();
 }
 ?>
