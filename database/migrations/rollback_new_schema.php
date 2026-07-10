@@ -7,7 +7,6 @@ if (php_sapi_name() !== 'cli') {
 include __DIR__ . '/../../config/koneksi.php';
 
 try {
-    $koneksi->beginTransaction();
     echo "Starting schema rollback...\n";
 
     // Helper helper to check column existence
@@ -222,10 +221,8 @@ try {
     }
     echo "Table 'users' reverted.\n";
 
-    $koneksi->commit();
     echo "Schema rollback completed successfully!\n";
 } catch (PDOException $e) {
-    $koneksi->rollBack();
     echo "Schema rollback failed: " . $e->getMessage() . "\n";
     exit(1);
 }

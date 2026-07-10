@@ -7,7 +7,6 @@ if (php_sapi_name() !== 'cli') {
 include __DIR__ . '/../../config/koneksi.php';
 
 try {
-    $koneksi->beginTransaction();
     echo "Starting schema migration...\n";
 
     // Helper helper to check column existence
@@ -271,10 +270,8 @@ try {
     }
     echo "Table 'eskul_libur' modified successfully.\n";
 
-    $koneksi->commit();
     echo "Schema migration finished successfully!\n";
 } catch (PDOException $e) {
-    $koneksi->rollBack();
     echo "Schema migration failed: " . $e->getMessage() . "\n";
     exit(1);
 }

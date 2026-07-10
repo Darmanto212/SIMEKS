@@ -1,85 +1,166 @@
-<?php require_once '../includes/auth_check.php';
+<?php
+include_once '../includes/auth_check.php';
+include_once '../config/koneksi.php';
+
+// Access control: only admin and pembina can view this page
 check_auth('admin');
-$pageTitle = "Kelola Pendaftaran - SIMEKS";
-include '../config/koneksi.php';
 
-$is_admin = (isset($_SESSION['admin_data']) && $_SESSION['admin_data']['role'] === 'admin');
-$is_pembina = (isset($_SESSION['pembina_data']) && $_SESSION['pembina_data']['role'] === 'pembina');
+$is_admin = ($_SESSION['role'] === 'admin');
+$is_pembina = ($_SESSION['role'] === 'pembina');
 
-$pembina_eskul_id = null;
-if ($is_pembina) {
-    $pembina_eskul_id = get_pembina_eskul_id($koneksi, $_SESSION['pembina_data']['user_id']);
+// CSRF Token setup
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 // Handle Approval/Rejection
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
-    $id = $_POST['id'];
-    $status = $_POST['status']; 
-    $catatan = $_POST['catatan'] ?? '';
-    
-    if (in_array($status, ['diterima', 'ditolak'])) {
-        // Security check for Pembina
-        $can_process = false;
-        if ($is_admin) {
-            $can_process = true;
-        } elseif ($is_pembina && $pembina_eskul_id) {
-            $stmt_chk = $koneksi->prepare("SELECT id FROM pendaftaran WHERE id = ? AND eskul_id = ?");
-            $stmt_chk->execute([$id, $pembina_eskul_id]);
-            if ($stmt_chk->fetch()) {
-                $can_process = true;
-            }
-        }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Verify CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        http_response_code(403);
+        die("Validasi CSRF gagal.");
+    }
 
-        if ($can_process) {
-            $stmt_reg = $koneksi->prepare("SELECT p.*, e.nama_eskul FROM pendaftaran p JOIN eskul e ON p.eskul_id = e.id WHERE p.id = ?");
-            $stmt_reg->execute([$id]);
-            $reg = $stmt_reg->fetch();
+    // 2. Business Rule: Admin is read-only and cannot process pendaftaran
+    if ($is_admin) {
+        $msg = "Akses ditolak. Administrator hanya memiliki hak akses untuk memonitor pendaftaran.";
+        $type = "danger";
+    } else {
+        $registration_id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT);
+        $status = $_POST['status'] ?? '';
+        $alasan_penolakan = trim($_POST['catatan'] ?? '');
 
-            if ($reg) {
-                $stmt = $koneksi->prepare("UPDATE pendaftaran SET status = ?, catatan = ? WHERE id = ?");
-                $stmt->execute([$status, $catatan, $id]);
-                
-                $notif_title = ($status == 'diterima') ? "Pendaftaran Diterima! ✅" : "Pendaftaran Ditolak ❌";
-                $notif_msg = ($status == 'diterima') 
-                    ? "Selamat! Pendaftaran kamu di ekskul " . $reg->nama_eskul . " telah disetujui." 
-                    : "Maaf, pendaftaran kamu di ekskul " . $reg->nama_eskul . " belum dapat diterima. Alasan: " . ($catatan ?: 'Tidak ada keterangan.');
-                
-                send_notification($koneksi, $reg->user_id, $notif_title, $notif_msg, $status == 'diterima' ? 'success' : 'danger');
-                
-                $msg = "Pendaftaran berhasil diproses!";
-                $type = "success";
-                log_activity($koneksi, 'Proses Pendaftaran', "Proses pendaftaran ID $id menjadi $status oleh " . ($is_admin ? 'Admin' : 'Pembina'), 'INFO');
+        if (!$registration_id || !in_array($status, ['diterima', 'ditolak'])) {
+            $msg = "Parameter pendaftaran tidak valid!";
+            $type = "danger";
+        } else {
+            // Validate: reason must be filled if status is ditolak
+            if ($status === 'ditolak' && empty($alasan_penolakan)) {
+                $msg = "Alasan penolakan wajib diisi jika status ditolak!";
+                $type = "danger";
+            } else {
+                $koneksi->beginTransaction();
+                try {
+                    // Fetch pendaftaran and lock it
+                    $stmt = $koneksi->prepare("SELECT * FROM pendaftaran WHERE id = ? FOR UPDATE");
+                    $stmt->execute([$registration_id]);
+                    $pendaftaran_row = $stmt->fetch();
+
+                    if (!$pendaftaran_row) {
+                        $msg = "Pendaftaran tidak ditemukan!";
+                        $type = "danger";
+                        $koneksi->rollBack();
+                    } elseif ($pendaftaran_row->status !== 'menunggu') {
+                        $msg = "Pendaftaran ini sudah diproses sebelumnya dan tidak dapat diubah!";
+                        $type = "danger";
+                        $koneksi->rollBack();
+                    } else {
+                        // Fetch and lock eskul to validate pembina and check quota
+                        $stmt_eskul = $koneksi->prepare("SELECT * FROM eskul WHERE id = ? FOR UPDATE");
+                        $stmt_eskul->execute([$pendaftaran_row->eskul_id]);
+                        $eskul = $stmt_eskul->fetch();
+
+                        if (!$eskul || $eskul->pembina_id != $_SESSION['user_id']) {
+                            $msg = "Akses ditolak. Anda bukan pembina untuk ekstrakurikuler ini!";
+                            $type = "danger";
+                            $koneksi->rollBack();
+                        } else {
+                            if ($status === 'diterima') {
+                                // Count current accepted members in this period
+                                $stmt_count = $koneksi->prepare("
+                                    SELECT COUNT(*) 
+                                    FROM pendaftaran 
+                                    WHERE eskul_id = ? AND periode_id = ? AND status = 'diterima' FOR UPDATE
+                                ");
+                                $stmt_count->execute([$pendaftaran_row->eskul_id, $pendaftaran_row->periode_id]);
+                                $current_count = $stmt_count->fetchColumn();
+
+                                if ($current_count >= $eskul->kuota) {
+                                    $msg = "Pendaftaran gagal disetujui karena kuota untuk ekstrakurikuler " . htmlspecialchars($eskul->nama) . " sudah penuh!";
+                                    $type = "danger";
+                                    $koneksi->rollBack();
+                                    goto after_process;
+                                }
+                            }
+
+                            // Update registration status
+                            $stmt_update = $koneksi->prepare("
+                                UPDATE pendaftaran 
+                                SET status = ?, alasan_penolakan = ?, diproses_oleh = ?, diproses_pada = CURRENT_TIMESTAMP 
+                                WHERE id = ?
+                            ");
+                            $stmt_update->execute([
+                                $status,
+                                ($status === 'ditolak' ? $alasan_penolakan : null),
+                                $_SESSION['user_id'],
+                                $registration_id
+                            ]);
+
+                            // Send one notification to the student (event_key unique constraint prevents duplicates)
+                            $event_key = 'pendaftaran_status_' . $registration_id;
+                            $notif_title = ($status === 'diterima') ? "Pendaftaran Diterima! ✅" : "Pendaftaran Ditolak ❌";
+                            $notif_msg = ($status === 'diterima')
+                                ? "Selamat! Pendaftaran kamu di eskul " . $eskul->nama . " telah disetujui."
+                                : "Maaf, pendaftaran kamu di eskul " . $eskul->nama . " belum dapat diterima. Alasan: " . $alasan_penolakan;
+
+                            $stmt_notif = $koneksi->prepare("
+                                INSERT INTO notifikasi (user_id, judul, pesan, reference_type, reference_id, event_key, type) 
+                                VALUES (?, ?, ?, 'pendaftaran', ?, ?, ?)
+                            ");
+                            $stmt_notif->execute([
+                                $pendaftaran_row->user_id,
+                                $notif_title,
+                                $notif_msg,
+                                $registration_id,
+                                $event_key,
+                                ($status === 'diterima' ? 'success' : 'danger')
+                            ]);
+
+                            // Record activity log
+                            log_activity($koneksi, 'Proses Pendaftaran', "Pendaftaran ID $registration_id diproses menjadi $status oleh Pembina", 'INFO');
+
+                            $koneksi->commit();
+                            $msg = "Pendaftaran berhasil diproses!";
+                            $type = "success";
+                        }
+                    }
+                } catch (Exception $e) {
+                    $koneksi->rollBack();
+                    error_log("Pembina approval transaction failed: " . $e->getMessage());
+                    $msg = "Terjadi kesalahan sistem saat memproses pendaftaran.";
+                    $type = "danger";
+                }
             }
         }
     }
 }
+after_process:
 
 // Fetch Pending & Latest Registrations based on role
 if ($is_admin) {
     $pendaftaran = $koneksi->query("
-        SELECT p.*, u.nama, u.kelas, e.nama_eskul 
+        SELECT p.*, u.nama, u.kelas, e.nama AS nama_eskul, v.nama AS nama_verifikator
         FROM pendaftaran p
         JOIN users u ON p.user_id = u.id
         JOIN eskul e ON p.eskul_id = e.id
-        ORDER BY p.status = 'menunggu' DESC, p.tanggal_daftar DESC
+        LEFT JOIN users v ON p.diproses_oleh = v.id
+        ORDER BY p.status = 'menunggu' DESC, p.created_at DESC
     ")->fetchAll();
 } else {
-    if ($pembina_eskul_id) {
-        $stmt_p = $koneksi->prepare("
-            SELECT p.*, u.nama, u.kelas, e.nama_eskul 
-            FROM pendaftaran p
-            JOIN users u ON p.user_id = u.id
-            JOIN eskul e ON p.eskul_id = e.id
-            WHERE p.eskul_id = ?
-            ORDER BY p.status = 'menunggu' DESC, p.tanggal_daftar DESC
-        ");
-        $stmt_p->execute([$pembina_eskul_id]);
-        $pendaftaran = $stmt_p->fetchAll();
-    } else {
-        $pendaftaran = [];
-    }
+    $stmt_p = $koneksi->prepare("
+        SELECT p.*, u.nama, u.kelas, e.nama AS nama_eskul, v.nama AS nama_verifikator
+        FROM pendaftaran p
+        JOIN users u ON p.user_id = u.id
+        JOIN eskul e ON p.eskul_id = e.id
+        LEFT JOIN users v ON p.diproses_oleh = v.id
+        WHERE e.pembina_id = ?
+        ORDER BY p.status = 'menunggu' DESC, p.created_at DESC
+    ");
+    $stmt_p->execute([$_SESSION['user_id']]);
+    $pendaftaran = $stmt_p->fetchAll();
 }
 
+$pageTitle = "Kelola Pendaftaran - SIMEKS";
 include '../includes/header.php'; 
 ?>
 
@@ -128,7 +209,7 @@ include '../includes/header.php';
                                             <div class="small text-muted"><?php echo htmlspecialchars($row->kelas); ?></div>
                                         </td>
                                         <td><span class="badge bg-maroon-light px-3 rounded-pill"><?php echo htmlspecialchars($row->nama_eskul); ?></span></td>
-                                        <td class="text-dark"><?php echo date('d M Y', strtotime($row->tanggal_daftar)); ?></td>
+                                        <td class="text-dark"><?php echo date('d M Y', strtotime($row->created_at)); ?></td>
                                         <td>
                                             <?php 
                                                 $badge = 'bg-warning-subtle text-warning';
@@ -139,73 +220,79 @@ include '../includes/header.php';
                                         </td>
                                         <td class="text-center">
                                              <?php if ($row->status == 'menunggu'): ?>
-                                                 <div class="d-flex justify-content-center gap-1">
-                                                     <form method="POST" style="display:inline;">
-                                                         <input type="hidden" name="id" value="<?php echo $row->id; ?>">
-                                                         <input type="hidden" name="status" value="diterima">
-                                                         <button type="submit" class="btn btn-sm btn-success rounded-pill px-3" onclick="return confirm('Terima pendaftaran ini?')">
-                                                             <i class="fas fa-check me-1"></i> Terima
+                                                 <?php if ($is_pembina): ?>
+                                                     <div class="d-flex justify-content-center gap-1">
+                                                         <form method="POST" style="display:inline;">
+                                                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                             <input type="hidden" name="id" value="<?php echo $row->id; ?>">
+                                                             <input type="hidden" name="status" value="diterima">
+                                                             <button type="submit" class="btn btn-sm btn-success rounded-pill px-3" onclick="return confirm('Terima pendaftaran ini?')">
+                                                                 <i class="fas fa-check me-1"></i> Terima
+                                                             </button>
+                                                         </form>
+                                                         
+                                                         <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" 
+                                                                 data-bs-toggle="modal" 
+                                                                 data-bs-target="#rejectModal<?php echo $row->id; ?>">
+                                                             <i class="fas fa-times me-1"></i> Tolak
                                                          </button>
-                                                     </form>
-                                                     
-                                                     <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" 
-                                                             data-bs-toggle="modal" 
-                                                             data-bs-target="#rejectModal<?php echo $row->id; ?>">
-                                                         <i class="fas fa-times me-1"></i> Tolak
-                                                     </button>
-                                                 </div>
- 
-                                                 <!-- Reject Modal -->
-                                                 <div class="modal fade" id="rejectModal<?php echo $row->id; ?>" tabindex="-1" aria-hidden="true">
-                                                     <div class="modal-dialog modal-dialog-centered">
-                                                         <div class="modal-content rounded-4 border-0 shadow text-dark text-start">
-                                                             <form method="POST">
-                                                                 <div class="modal-header border-0 pb-0">
-                                                                     <h5 class="modal-title fw-bold">Alasan Penolakan</h5>
-                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                 </div>
-                                                                 <div class="modal-body">
-                                                                     <input type="hidden" name="id" value="<?php echo $row->id; ?>">
-                                                                     <input type="hidden" name="status" value="ditolak">
-                                                                     <div class="mb-3">
-                                                                         <label class="form-label small fw-bold">Berikan alasan pendaftaran ditolak:</label>
-                                                                         <textarea name="catatan" class="form-control rounded-3" rows="3" placeholder="Contoh: Kuota penuh, Persyaratan tidak lengkap, dll." required></textarea>
+                                                     </div>
+
+                                                     <!-- Reject Modal -->
+                                                     <div class="modal fade" id="rejectModal<?php echo $row->id; ?>" tabindex="-1" aria-hidden="true">
+                                                         <div class="modal-dialog modal-dialog-centered">
+                                                             <div class="modal-content rounded-4 border-0 shadow text-dark text-start">
+                                                                 <form method="POST">
+                                                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                                     <div class="modal-header border-0 pb-0">
+                                                                         <h5 class="modal-title fw-bold">Alasan Penolakan</h5>
+                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                      </div>
-                                                                 </div>
-                                                                 <div class="modal-footer border-0 pt-0">
-                                                                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
-                                                                     <button type="submit" class="btn btn-danger rounded-pill px-4">Kirim Penolakan</button>
-                                                                 </div>
-                                                             </form>
+                                                                     <div class="modal-body">
+                                                                         <input type="hidden" name="id" value="<?php echo $row->id; ?>">
+                                                                         <input type="hidden" name="status" value="ditolak">
+                                                                         <div class="mb-3">
+                                                                             <label class="form-label small fw-bold">Berikan alasan pendaftaran ditolak:</label>
+                                                                             <textarea name="catatan" class="form-control rounded-3" rows="3" placeholder="Contoh: Kuota penuh, Persyaratan tidak lengkap, dll." required></textarea>
+                                                                         </div>
+                                                                     </div>
+                                                                     <div class="modal-footer border-0 pt-0">
+                                                                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                                                                         <button type="submit" class="btn btn-danger rounded-pill px-4">Kirim Penolakan</button>
+                                                                     </div>
+                                                                 </form>
+                                                             </div>
                                                          </div>
                                                      </div>
-                                                 </div>
+                                                 <?php else: ?>
+                                                     <span class="text-muted small fst-italic">Menunggu verifikasi Pembina</span>
+                                                 <?php endif; ?>
                                              <?php else: ?>
                                                  <div class="d-flex flex-column align-items-center text-dark">
-                                                     <span class="text-muted small fst-italic">Diproses pada:</span>
+                                                     <span class="text-muted small fst-italic">Diproses oleh: <?php echo htmlspecialchars($row->nama_verifikator ?? 'Sistem'); ?></span>
                                                      <span class="small fw-bold"><?php echo $row->status == 'diterima' ? 'Diterima ✅' : 'Ditolak ❌'; ?></span>
-                                                     <?php if($row->catatan): ?>
-                                                        <span class="extra-small text-muted text-center" style="max-width: 150px;">"<?php echo htmlspecialchars($row->catatan); ?>"</span>
+                                                     <?php if($row->alasan_penolakan): ?>
+                                                        <span class="extra-small text-muted text-center" style="max-width: 150px;">"<?php echo htmlspecialchars($row->alasan_penolakan); ?>"</span>
                                                      <?php endif; ?>
                                                  </div>
                                              <?php endif; ?>
-                                         </td>
-                                     </tr>
-                                 <?php endforeach; ?>
-                             <?php endif; ?>
-                         </tbody>
-                     </table>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- 
- <script>
-     document.getElementById("menu-toggle").addEventListener("click", function(e) {
-         e.preventDefault();
-         document.getElementById("wrapper").classList.toggle("toggled");
-     });
- </script>
- 
- <?php include '../includes/footer.php'; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("menu-toggle").addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("wrapper").classList.toggle("toggled");
+    });
+</script>
+
+<?php include '../includes/footer.php'; ?>
