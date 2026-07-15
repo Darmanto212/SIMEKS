@@ -8,7 +8,7 @@ include '../includes/header.php';
 $user_id = $_SESSION['siswa_data']['user_id'];
 
 // Fetch all announcements
-$pengumuman = $koneksi->query("SELECT * FROM pengumuman ORDER BY tanggal DESC")->fetchAll();
+$pengumuman = $koneksi->query("SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC")->fetchAll();
 
 ?>
 
@@ -52,7 +52,7 @@ $pengumuman = $koneksi->query("SELECT * FROM pengumuman ORDER BY tanggal DESC")-
                                         </div>
                                     </div>
                                     <div class="text-muted small">
-                                        <i class="far fa-clock me-1"></i> <?php echo date('d M Y, H:i', strtotime($row->tanggal)); ?>
+                                        <i class="far fa-clock me-1"></i> <?php echo date('d M Y, H:i', strtotime($row->tanggal_terbit)); ?>
                                     </div>
                                 </div>
                                 <div class="ps-md-5 ms-md-2 mt-2">

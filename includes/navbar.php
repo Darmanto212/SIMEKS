@@ -17,16 +17,20 @@
                     <a class="nav-link active" href="index.php">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#ekskul">Ekskul</a>
+                    <a class="nav-link" href="#ekskul">Ekstrakurikuler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#prestasi">Prestasi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#pengumuman">Pengumuman</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#kontak">Kontak</a>
+                    <a class="nav-link" href="#tentang">Tentang</a>
                 </li>
-                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                    <a href="login.php" class="btn btn-maroon px-4 rounded-pill shadow-sm">Masuk</a>
+                <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-flex flex-column flex-lg-row gap-2 align-items-center">
+                    <a href="login.php" class="btn btn-outline-maroon px-4 py-2 rounded-pill shadow-sm">Masuk</a>
+                    <a href="register.php" class="btn btn-maroon px-4 py-2 rounded-pill shadow-sm">Daftar</a>
                 </li>
             </ul>
         </div>

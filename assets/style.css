@@ -275,6 +275,32 @@ a {
     transform: translateY(-2px);
 }
 
+.btn-outline-maroon {
+    background-color: transparent;
+    color: var(--maroon);
+    border: 2px solid var(--maroon);
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-outline-maroon:hover {
+    background-color: var(--maroon);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.py-4-compact {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.py-3-compact {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+}
+
 .btn-outline-light-custom {
     color: white;
     border: 2px solid white;

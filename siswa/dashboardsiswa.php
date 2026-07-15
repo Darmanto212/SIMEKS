@@ -35,7 +35,7 @@ $stmt->execute([$user_id]);
 $all_registrations = $stmt->fetchAll();
 
 // Fetch Latest 4 Announcements
-$announcements = $koneksi->query("SELECT * FROM pengumuman ORDER BY tanggal DESC LIMIT 4")->fetchAll();
+$announcements = $koneksi->query("SELECT * FROM pengumuman ORDER BY tanggal_terbit DESC LIMIT 4")->fetchAll();
 
 // Fetch Real Attendance Stats
 $stmt = $koneksi->prepare("SELECT COUNT(*) FROM absensi WHERE user_id = ? AND status = 'hadir'");
@@ -219,7 +219,7 @@ $user = [
                                 <div class="mb-3 pb-3 border-bottom">
                                     <span class="badge <?php echo $badge; ?> mb-2"><?php echo $ann->kategori; ?></span>
                                     <p class="mb-1 fw-bold small"><?php echo htmlspecialchars($ann->judul); ?></p>
-                                    <p class="extra-small text-muted mb-0"><?php echo date('d M Y', strtotime($ann->tanggal)); ?></p>
+                                    <p class="extra-small text-muted mb-0"><?php echo date('d M Y', strtotime($ann->tanggal_terbit)); ?></p>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
