@@ -303,7 +303,10 @@ $admin = [
                         <?php if (empty($latest_logs)): ?>
                             <div class="text-center py-3 text-muted small">Belum ada aktivitas.</div>
                         <?php else: ?>
-                            <?php foreach ($latest_logs as $log): ?>
+                            <?php foreach ($latest_logs as $index => $log): ?>
+                                <?php if ($index === 2): ?>
+                                    <div class="collapse" id="collapseLogs">
+                                <?php endif; ?>
                                 <div class="d-flex mb-3">
                                     <div class="flex-shrink-0 me-3 <?php
                                                                     if ($log->tipe == 'SUKSES') echo 'text-success';
@@ -323,9 +326,17 @@ $admin = [
                                         <p class="extra-small text-muted mb-0"><?php echo date('H:i', strtotime($log->tanggal)); ?> - <?php echo htmlspecialchars($log->keterangan); ?></p>
                                     </div>
                                 </div>
+                                <?php if ($index === count($latest_logs) - 1 && $index >= 2): ?>
+                                    </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        <a href="logs.php" class="btn btn-outline-maroon w-100 rounded-pill small fw-bold mt-2">Log Selengkapnya</a>
+                        <?php if (count($latest_logs) > 2): ?>
+                            <button class="btn btn-outline-maroon w-100 rounded-pill small fw-bold mt-2 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogs" aria-expanded="false" aria-controls="collapseLogs" id="btnToggleLogs" onclick="this.innerHTML = this.innerHTML.trim() === 'Sembunyikan' ? 'Tampilkan Lebih Banyak' : 'Sembunyikan'">
+                                Tampilkan Lebih Banyak
+                            </button>
+                        <?php endif; ?>
+                        <a href="logs.php" class="btn btn-light w-100 rounded-pill small fw-bold text-muted mt-1" style="font-size: 0.75rem;">Audit Trail Selengkapnya</a>
                     </div>
                 </div>
                 <?php endif; ?>
