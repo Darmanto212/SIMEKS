@@ -102,18 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_eskul'])) {
     }
 }
 
-// Fetch All Eskul with active pembina
+// Fetch All Eskul (LEFT JOIN to show even those without assigned/active pembina)
 $period_id_val = $active_period->id ?? 0;
 $eskul_list = $koneksi->query("
     SELECT e.*, u.nama AS pembina_nama,
            (SELECT COUNT(*) FROM pendaftaran WHERE eskul_id = e.id AND status = 'diterima' AND periode_id = $period_id_val) as terdaftar 
     FROM eskul e 
-    JOIN users u ON e.pembina_id = u.id
+    LEFT JOIN users u ON e.pembina_id = u.id AND u.role = 'pembina' AND u.status = 'aktif' AND u.deleted_at IS NULL
     WHERE e.status = 'aktif' 
-      AND u.role = 'pembina' 
-      AND u.status = 'aktif'
       AND e.deleted_at IS NULL
-      AND u.deleted_at IS NULL
     ORDER BY e.nama ASC
 ")->fetchAll();
 
@@ -158,7 +155,7 @@ include '../includes/header.php';
                                 <div class="d-flex flex-column gap-2 mb-4">
                                     <div class="small d-flex align-items-center text-muted">
                                         <i class="fas fa-user-tie text-maroon me-2" style="width: 20px;"></i>
-                                        <span><?php echo htmlspecialchars($row->pembina_nama); ?></span>
+                                        <span><?php echo $row->pembina_nama ? htmlspecialchars($row->pembina_nama) : '<span class="text-danger italic">Belum ada pembina aktif</span>'; ?></span>
                                     </div>
                                     <div class="small d-flex align-items-center text-muted">
                                         <i class="fas fa-calendar-alt text-maroon me-2" style="width: 20px;"></i>
@@ -176,6 +173,8 @@ include '../includes/header.php';
 
                                 <?php if (!$active_period): ?>
                                     <button class="btn btn-secondary w-100 rounded-pill py-2 disabled">Periode Nonaktif</button>
+                                <?php elseif (!$row->pembina_nama): ?>
+                                    <button class="btn btn-secondary w-100 rounded-pill py-2 disabled" title="Hubungi Admin untuk menunjuk pembina">Belum Ada Pembina</button>
                                 <?php elseif (isset($my_registrations[$row->id])): ?>
                                     <?php 
                                         $status = $my_registrations[$row->id];
