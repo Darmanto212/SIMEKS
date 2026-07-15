@@ -32,15 +32,6 @@ function require_login() {
         exit();
     }
 
-    // Handle session timeout (1800 seconds = 30 minutes)
-    $timeout = 1800;
-    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-        logout_user();
-        $base = (stripos($_SERVER['PHP_SELF'], '/siswa/') !== false || stripos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../' : './';
-        header("Location: " . $base . "login.php?timeout=1");
-        exit();
-    }
-
     // Update last activity timestamp
     $_SESSION['last_activity'] = time();
 }

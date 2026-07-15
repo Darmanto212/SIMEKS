@@ -87,13 +87,14 @@ Berikut adalah beberapa skenario fungsionalitas utama yang dapat dicantumkan pad
 
 ---
 
-## 📊 5. Script PlantUML Use Case Diagram (Vertical Layout)
+## 📊 5. Script PlantUML Use Case Diagram (Horizontal Layout)
 
-Salin kode di bawah ini ke editor **[PlantUML Web Server](http://www.plantuml.com/plantuml/)** untuk menghasilkan diagram secara otomatis dengan format vertikal:
+Salin kode di bawah ini ke editor **[PlantUML Web Server](http://www.plantuml.com/plantuml/)** untuk menghasilkan diagram secara otomatis dengan format horizontal (aktor di samping) tanpa relasi extend dan include:
 
 ```plantuml
 @startuml
-' Arah tata letak diatur vertikal secara default
+' Arah tata letak diatur horizontal (aktor di samping)
+left to right direction
 skinparam packageStyle rectangle
 skinparam roundcorner 10
 skinparam shadowing false
@@ -108,101 +109,39 @@ skinparam UseCaseBorderColor #2B6CB0
 skinparam UseCaseBackgroundColor #F7FAFC
 skinparam UseCaseFontSize 11
 
-title Use Case Diagram SIMEKS (15 Kegiatan Utama & Extend)
+title Use Case Diagram SIMEKS (15 Kegiatan Utama)
 
 ' Aktor
-actor "Admin Master" as admin
-actor "Pembina Ekstrakurikuler" as pembina
 actor "Siswa Aktif" as siswa
+actor "Pembina Ekstrakurikuler" as pembina
+actor "Admin" as admin
 
 ' Pewarisan hak akses (Admin mewarisi hak Pembina)
 pembina <|-- admin
 
 rectangle "Sistem Informasi Manajemen Ekstrakurikuler (SIMEKS)" {
   
-  ' --- 15 Use Case Utama & Pasangan Extend-nya ---
-  
-  ' 1. Login
+  ' 15 Use Case Utama
   usecase "Login Sistem" as UC_Login
-  usecase "Registrasi Akun Baru" as UC_Register
-  usecase "Validasi Data" as UC_Validasi
-  UC_Register ..> UC_Login : <<extend>>
-  UC_Login ..> UC_Validasi : <<include>>
-  
-  ' 2. Profil
   usecase "Mengelola Profil Mandiri" as UC_Profil
-  usecase "Mengubah Foto Profil & Password" as UC_EditProfil
-  UC_EditProfil ..> UC_Profil : <<extend>>
-  
-  ' 3. Jelajah Ekskul
   usecase "Menjelajahi Informasi Ekskul" as UC_JelajahEskul
-  usecase "Melihat Detail Pembina & Kuota" as UC_DetailEskul
-  UC_DetailEskul ..> UC_JelajahEskul : <<extend>>
-  
-  ' 4. Daftar Ekskul
   usecase "Melakukan Pendaftaran Ekskul" as UC_DaftarEskul
-  usecase "Membatalakan Pengajuan Pendaftaran" as UC_BatalDaftar
-  UC_BatalDaftar ..> UC_DaftarEskul : <<extend>>
-  
-  ' 5. Verifikasi
   usecase "Verifikasi Pendaftaran Anggota" as UC_Verifikasi
-  usecase "Menginput Catatan Penolakan" as UC_TolakCatatan
-  UC_TolakCatatan ..> UC_Verifikasi : <<extend>>
-  
-  ' 6. Jadwal
   usecase "Mengelola Jadwal Latihan" as UC_Jadwal
-  usecase "Mengubah Lokasi & Jam Latihan" as UC_EditJadwal
-  UC_EditJadwal ..> UC_Jadwal : <<extend>>
-  
-  ' 7. Absensi
   usecase "Melakukan Absensi Kehadiran" as UC_Absen
-  usecase "Menginput Keterangan Izin/Sakit" as UC_KeteranganAbsen
-  UC_KeteranganAbsen ..> UC_Absen : <<extend>>
-  
-  ' 8. Riwayat Absen Siswa
   usecase "Melihat Riwayat Absensi" as UC_RiwayatAbsen
-  usecase "Melihat Statistik Kehadiran" as UC_StatistikAbsen
-  UC_StatistikAbsen ..> UC_RiwayatAbsen : <<extend>>
-  
-  ' 9. Prestasi
   usecase "Mengelola Data Prestasi" as UC_Prestasi
-  usecase "Mengunggah File Dokumentasi Lomba" as UC_UploadDokumentasi
-  UC_UploadDokumentasi ..> UC_Prestasi : <<extend>>
-  
-  ' 10. Sertifikat
   usecase "Mengelola E-Sertifikat" as UC_Sertifikat
-  usecase "Mengunduh E-Sertifikat PDF" as UC_UnduhSertifikat
-  UC_UnduhSertifikat ..> UC_Sertifikat : <<extend>>
-  
-  ' 11. Laporan
   usecase "Melihat Laporan Ekskul" as UC_Laporan
-  usecase "Mencetak Laporan (Excel/PDF)" as UC_CetakLaporan
-  UC_CetakLaporan ..> UC_Laporan : <<extend>>
-  
-  ' 12. CRUD Ekskul Admin
   usecase "Mengelola Data Ekstrakurikuler" as UC_CRUDEskul
-  usecase "Mengatur Penugasan Guru Pembina" as UC_TugasPembina
-  UC_TugasPembina ..> UC_CRUDEskul : <<extend>>
-  
-  ' 13. CRUD Pengguna Admin
   usecase "Mengelola Akun Pengguna" as UC_CRUDUser
-  usecase "Mengubah Status Aktif Akun" as UC_StatusAkun
-  UC_StatusAkun ..> UC_CRUDUser : <<extend>>
-  
-  ' 14. CRUD Pengumuman Admin
   usecase "Mengelola Pengumuman & Agenda" as UC_CRUDPengumuman
-  usecase "Mengirim Notifikasi Real-Time" as UC_Notifikasi
-  UC_Notifikasi ..> UC_CRUDPengumuman : <<extend>>
-  
-  ' 15. Audit Logs Admin
   usecase "Monitoring Audit Logs" as UC_Logs
-  usecase "Ekspor Log Aktivitas Sistem" as UC_EksporLogs
-  UC_EksporLogs ..> UC_Logs : <<extend>>
 }
 
 ' --- Asosiasi Aktor ke Use Case Utama ---
 
-' Siswa Aktif
+' Siswa Aktif (Kiri)
 siswa --> UC_Login
 siswa --> UC_Profil
 siswa --> UC_JelajahEskul
@@ -210,37 +149,21 @@ siswa --> UC_DaftarEskul
 siswa --> UC_RiwayatAbsen
 siswa --> UC_Sertifikat
 
-' Pembina Ekstrakurikuler
-pembina --> UC_Login
-pembina --> UC_Profil
-pembina --> UC_Verifikasi
-pembina --> UC_Jadwal
-pembina --> UC_Absen
-pembina --> UC_Prestasi
-pembina --> UC_Laporan
-pembina --> UC_Sertifikat
+' Pembina Ekstrakurikuler (Kanan)
+UC_Login <-- pembina
+UC_Profil <-- pembina
+UC_Verifikasi <-- pembina
+UC_Jadwal <-- pembina
+UC_Absen <-- pembina
+UC_Prestasi <-- pembina
+UC_Laporan <-- pembina
+UC_Sertifikat <-- pembina
 
-' Admin Master
-admin --> UC_CRUDEskul
-admin --> UC_CRUDUser
-admin --> UC_CRUDPengumuman
-admin --> UC_Logs
-
-' Pengaturan susunan vertikal
-UC_Login -[hidden]down-> UC_Profil
-UC_Profil -[hidden]down-> UC_JelajahEskul
-UC_JelajahEskul -[hidden]down-> UC_DaftarEskul
-UC_DaftarEskul -[hidden]down-> UC_Verifikasi
-UC_Verifikasi -[hidden]down-> UC_Jadwal
-UC_Jadwal -[hidden]down-> UC_Absen
-UC_Absen -[hidden]down-> UC_RiwayatAbsen
-UC_RiwayatAbsen -[hidden]down-> UC_Prestasi
-UC_Prestasi -[hidden]down-> UC_Sertifikat
-UC_Sertifikat -[hidden]down-> UC_Laporan
-UC_Laporan -[hidden]down-> UC_CRUDEskul
-UC_CRUDEskul -[hidden]down-> UC_CRUDUser
-UC_CRUDUser -[hidden]down-> UC_CRUDPengumuman
-UC_CRUDPengumuman -[hidden]down-> UC_Logs
-
+' Admin (Kanan)
+UC_CRUDEskul <-- admin
+UC_CRUDUser <-- admin
+UC_CRUDPengumuman <-- admin
+UC_Logs <-- admin
 @enduml
 ```
+

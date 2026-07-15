@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perancangan Halaman Profil Pengguna</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+    body {
+        background-color: #f5f5f5;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #000000;
+        padding: 20px 0;
+        margin: 0;
+    }
+    .wf-container {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto 30px auto;
+        background: #ffffff;
+        border: 2px solid #000000;
+        padding: 15mm;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    .wf-title {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 2px solid #000000;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .wf-navbar {
+        border: 1.5px solid #000000;
+        background-color: #fcfcfc;
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+    .wf-nav-links {
+        display: flex;
+        gap: 15px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .wf-nav-link {
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #000000;
+        border: 1px solid transparent;
+        padding: 4px 8px;
+    }
+    .wf-nav-link.active {
+        border: 1.5px solid #000000;
+        background: #f0f0f0;
+        border-radius: 3px;
+    }
+    .wf-btn {
+        background: #f0f0f0;
+        border: 1.5px solid #000000;
+        color: #000000;
+        padding: 5px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .wf-btn:hover {
+        background: #e0e0e0;
+    }
+    .wf-btn-outline {
+        background: #ffffff;
+        border: 1.5px dashed #000000;
+        color: #000000;
+        padding: 5px 12px;
+        font-size: 11px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        border-radius: 4px;
+    }
+    .wf-btn-disabled {
+        background: #ffffff;
+        border: 1.5px solid #cccccc;
+        color: #999999;
+        padding: 5px 12px;
+        font-size: 11px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        border-radius: 4px;
+        cursor: not-allowed;
+    }
+    .wf-hero {
+        border: 1.5px solid #000000;
+        background-color: #fafafa;
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 25px;
+        border-radius: 6px;
+    }
+    .wf-hero h1 {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+    .wf-hero p {
+        font-size: 12px;
+        color: #555555;
+        margin-bottom: 20px;
+    }
+    .wf-badge {
+        border: 1px solid #000000;
+        background: #f0f0f0;
+        padding: 3px 8px;
+        font-size: 9px;
+        font-weight: bold;
+        border-radius: 20px;
+        display: inline-block;
+    }
+    .wf-card {
+        border: 1.5px solid #000000;
+        background: #ffffff;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 15px;
+        position: relative;
+    }
+    .wf-card-header {
+        font-size: 12px;
+        font-weight: bold;
+        border-bottom: 1.5px solid #000000;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .wf-placeholder {
+        position: relative;
+        border: 1.5px dashed #000000;
+        background-color: #fcfcfc;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .wf-placeholder::before, .wf-placeholder::after {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        background: linear-gradient(to top right, transparent 49.5%, #dddddd 49.5%, #dddddd 50.5%, transparent 50.5%);
+        pointer-events: none;
+    }
+    .wf-placeholder::after {
+        background: linear-gradient(to bottom right, transparent 49.5%, #dddddd 49.5%, #dddddd 50.5%, transparent 50.5%);
+    }
+    .wf-placeholder-text {
+        background: #ffffff;
+        border: 1px solid #000000;
+        padding: 2px 6px;
+        font-size: 9px;
+        font-weight: bold;
+        z-index: 1;
+        border-radius: 3px;
+    }
+    .wf-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1.5px solid #000000;
+        background: #f0f0f0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .wf-circle-dashed {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1.5px dashed #000000;
+        background: #fcfcfc;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .wf-input {
+        width: 100%;
+        border: 1.5px solid #000000;
+        padding: 6px;
+        font-size: 11px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        background: #ffffff;
+        margin-bottom: 10px;
+    }
+    .wf-label {
+        font-size: 10px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+    }
+    .wf-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        font-size: 11px;
+    }
+    .wf-table th {
+        background: #f0f0f0;
+        border: 1.5px solid #000000;
+        padding: 6px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .wf-table td {
+        border: 1.5px solid #000000;
+        padding: 6px;
+        text-align: center;
+    }
+    .wf-sidebar-layout {
+        display: flex;
+        flex-grow: 1;
+        gap: 15px;
+        min-height: 240mm;
+    }
+    .wf-sidebar {
+        width: 180px;
+        border: 1.5px solid #000000;
+        background: #fafafa;
+        padding: 15px 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-radius: 4px;
+    }
+    .wf-sidebar .brand {
+        font-weight: bold;
+        font-size: 13px;
+        border-bottom: 1.5px solid #000000;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .wf-sidebar-link {
+        font-size: 11px;
+        text-decoration: none;
+        color: #000000;
+        padding: 6px 10px;
+        border: 1.5px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 3px;
+    }
+    .wf-sidebar-link.active {
+        border: 1.5px solid #000000;
+        background: #f0f0f0;
+        font-weight: bold;
+    }
+    .wf-main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .wf-header-bar {
+        border: 1.5px solid #000000;
+        background: #ffffff;
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 4px;
+    }
+    .wf-footer {
+        border-top: 1.5px solid #000000;
+        padding-top: 10px;
+        margin-top: auto;
+        text-align: center;
+        font-size: 9px;
+        font-weight: 500;
+    }
+    .wf-progress {
+        width: 100%;
+        height: 10px;
+        border: 1.5px solid #000000;
+        background: #ffffff;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 4px 0;
+    }
+    .wf-progress-bar {
+        height: 100%;
+        background: #777777;
+    }
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+    .col-3 { flex: 0 0 25%; max-width: 25%; padding: 0 8px; box-sizing: border-box; }
+    .col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; padding: 0 8px; box-sizing: border-box; }
+    .col-5 { flex: 0 0 41.666667%; max-width: 41.666667%; padding: 0 8px; box-sizing: border-box; }
+    .col-6 { flex: 0 0 50%; max-width: 50%; padding: 0 8px; box-sizing: border-box; }
+    .col-7 { flex: 0 0 58.333333%; max-width: 58.333333%; padding: 0 8px; box-sizing: border-box; }
+    .col-8 { flex: 0 0 66.666667%; max-width: 66.666667%; padding: 0 8px; box-sizing: border-box; }
+    .col-12 { flex: 0 0 100%; max-width: 100%; padding: 0 8px; box-sizing: border-box; }
+</style>
+</head>
+<body>
+    <div class="wf-container">
+        <div class="wf-title">
+            <span>Perancangan Halaman Profil Pengguna</span>
+        </div>
+        
+        <div class="wf-sidebar-layout">
+            <div class="wf-sidebar">
+                <div class="brand">SIMEKS</div>
+                <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-basketball-ball"></i> Daftar Ekskul</a>
+                <a href="#"><i class="fas fa-clipboard-list"></i> Riwayat Absensi</a>
+                <a href="#"><i class="fas fa-trophy"></i> Prestasi</a>
+                <a href="#" class="wf-sidebar-link active"><i class="fas fa-user-edit"></i> Edit Profil</a>
+                <a href="#" style="margin-top: auto; border-top: 1.5px solid #000; padding-top: 10px;"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+            </div>
+            
+            <div class="wf-main-content">
+                <div class="wf-header-bar">
+                    <h6 style="font-size: 12px; font-weight: bold; margin: 0;">Pengaturan Akun &amp; Profil Pengguna</h6>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="wf-card" style="text-align: center;">
+                            <div class="wf-circle" style="width: 80px; height: 80px; font-size: 28px; margin: 0 auto 10px auto;">AF</div>
+                            <h6 style="font-size: 11px; font-weight: bold; margin: 0 0 2px 0;">Ahmad Fauzi</h6>
+                            <p style="font-size: 9px; color: #666; margin: 0 0 8px 0;">Siswa Kelas XI MIPA 2</p>
+                            <span class="wf-badge">Bola Basket</span>
+                            <hr style="margin: 10px 0; border: none; border-top: 1px solid #000;">
+                            <label class="wf-label">Ganti Foto Profil</label>
+                            <input type="file" class="wf-input" style="font-size: 9px;">
+                            <button class="wf-btn w-100" style="padding: 4px; margin-top: 5px;">[Unggah Foto]</button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-8">
+                        <div class="wf-card">
+                            <h6 style="font-size: 11px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #000; padding-bottom: 5px;">Detail Profil Diri</h6>
+                            <form>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="wf-label">NISN (Read Only)</label>
+                                        <input type="text" class="wf-input" value="101230456" readonly style="background: #f0f0f0;">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="wf-label">Nama Lengkap</label>
+                                        <input type="text" class="wf-input" value="Ahmad Fauzi">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="wf-label">Email</label>
+                                        <input type="email" class="wf-input" value="ahmad.fauzi@gmail.com">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="wf-label">Kelas</label>
+                                        <select class="wf-input"><option>XI MIPA 2</option></select>
+                                    </div>
+                                </div>
+                                <hr style="margin: 15px 0; border: none; border-top: 1px solid #000;">
+                                <h6 style="font-size: 10px; font-weight: bold; margin-bottom: 8px; color: #555;">Ganti Kata Sandi</h6>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="wf-label">Kata Sandi Lama</label>
+                                        <input type="password" class="wf-input" placeholder="Masukkan sandi saat ini">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="wf-label">Kata Sandi Baru</label>
+                                        <input type="password" class="wf-input" placeholder="Min. 8 karakter">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="wf-label">Konfirmasi Sandi Baru</label>
+                                        <input type="password" class="wf-input" placeholder="Ulangi sandi baru">
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                                    <button type="submit" class="wf-btn">[Simpan Perubahan]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="wf-footer">
+            SIMEKS SMAN 2 SUKATANI
+        </div>
+    </div>
+</body>
+</html>
