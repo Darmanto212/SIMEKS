@@ -23,7 +23,7 @@
 
         <?php if ($is_admin): ?>
             <a href="kelola-admin.php" class="list-group-item list-group-item-action bg-transparent text-white border-0 rounded-3 mb-2 <?php echo ($current_page == 'kelola-admin.php') ? 'active-nav' : 'hover-bg'; ?>">
-                <i class="fas fa-user-lock me-2"></i> Kelola Admin Master
+                <i class="fas fa-user-lock me-2"></i> Admin
             </a>
             <a href="kelola-pembina.php" class="list-group-item list-group-item-action bg-transparent text-white border-0 rounded-3 mb-2 <?php echo ($current_page == 'kelola-pembina.php') ? 'active-nav' : 'hover-bg'; ?>">
                 <i class="fas fa-user-shield me-2"></i> Kelola Pembina
@@ -64,6 +64,9 @@
         </a>
 
         <?php if ($is_admin): ?>
+            <a href="kelola-periode.php" class="list-group-item list-group-item-action bg-transparent text-white border-0 rounded-3 mb-2 <?php echo ($current_page == 'kelola-periode.php') ? 'active-nav' : 'hover-bg'; ?>">
+                <i class="fas fa-history me-2"></i> Kelola Periode
+            </a>
             <a href="pengaturan.php" class="list-group-item list-group-item-action bg-transparent text-white border-0 rounded-3 mb-2 <?php echo ($current_page == 'pengaturan.php') ? 'active-nav' : 'hover-bg'; ?>">
                 <i class="fas fa-cog me-2"></i> Pengaturan
             </a>

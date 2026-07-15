@@ -88,9 +88,16 @@ if ($is_admin) {
 
         <div class="container-fluid p-4">
             <div class="card border-0 shadow-sm rounded-4 p-4">
-                <div class="table-responsive">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <h5 class="fw-bold mb-0 text-dark">Data Siswa</h5>
+                    <div class="position-relative" style="width: 250px;">
+                        <input type="text" id="searchInput" class="form-control rounded-pill ps-4 pe-5" placeholder="Cari siswa..." style="font-size: 0.85rem; border: 1px solid #ced4da;">
+                        <i class="fas fa-search position-absolute text-muted" style="right: 18px; top: 50%; transform: translateY(-50%);"></i>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 550px; overflow-y: auto;">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                        <thead class="table-light sticky-top" style="position: sticky; top: 0; z-index: 10; background-color: #f8f9fa;">
                             <tr>
                                 <th>Nama Lengkap</th>
                                 <th>NISN</th>
@@ -252,6 +259,40 @@ if ($is_admin) {
     document.getElementById("menu-toggle").addEventListener("click", function(e) {
         e.preventDefault();
         document.getElementById("wrapper").classList.toggle("toggled");
+    });
+
+    // Real-time search filter for students
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll("tbody tr:not(.no-result-row)");
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(query)) {
+                row.style.setProperty("display", "", "important");
+                visibleCount++;
+            } else {
+                row.style.setProperty("display", "none", "important");
+            }
+        });
+
+        // Handle no results display
+        let noResultRow = document.querySelector(".no-result-row");
+        if (visibleCount === 0 && query !== "") {
+            if (!noResultRow) {
+                const tbody = document.querySelector("tbody");
+                noResultRow = document.createElement("tr");
+                noResultRow.className = "no-result-row";
+                noResultRow.innerHTML = `<td colspan="5" class="text-center py-5 text-muted">Tidak ditemukan hasil pencarian untuk "${this.value}"</td>`;
+                tbody.appendChild(noResultRow);
+            } else {
+                noResultRow.style.setProperty("display", "", "important");
+                noResultRow.querySelector("td").textContent = `Tidak ditemukan hasil pencarian untuk "${this.value}"`;
+            }
+        } else if (noResultRow) {
+            noResultRow.style.setProperty("display", "none", "important");
+        }
     });
 </script>
 

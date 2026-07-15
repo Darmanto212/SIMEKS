@@ -55,7 +55,7 @@ $notifications = $stmt->fetchAll();
                                     <td colspan="5" class="text-center py-5 text-muted">Belum ada notifikasi yang terkirim.</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($notifications as $n): ?>
+                                <?php foreach (array_slice($notifications, 0, 5) as $n): ?>
                                     <tr>
                                         <td class="px-4 small text-muted"><?php echo date('d M Y, H:i', strtotime($n->created_at)); ?></td>
                                         <td class="fw-bold"><?php echo htmlspecialchars($n->penerima); ?></td>
@@ -76,8 +76,38 @@ $notifications = $stmt->fetchAll();
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </tbody>
+                        <?php if (count($notifications) > 5): ?>
+                            <tbody class="collapse" id="collapseNotifications">
+                                <?php foreach (array_slice($notifications, 5) as $n): ?>
+                                    <tr>
+                                        <td class="px-4 small text-muted"><?php echo date('d M Y, H:i', strtotime($n->created_at)); ?></td>
+                                        <td class="fw-bold"><?php echo htmlspecialchars($n->penerima); ?></td>
+                                        <td>
+                                            <span class="badge <?php echo ($n->type == 'success' ? 'bg-success' : ($n->type == 'danger' ? 'bg-danger' : 'bg-info')); ?> bg-opacity-10 text-<?php echo ($n->type == 'success' ? 'success' : ($n->type == 'danger' ? 'danger' : 'info')); ?> px-2 py-1 rounded">
+                                                <?php echo htmlspecialchars($n->judul); ?>
+                                            </span>
+                                        </td>
+                                        <td class="small text-muted"><?php echo htmlspecialchars($n->pesan); ?></td>
+                                        <td>
+                                            <?php if ($n->is_read): ?>
+                                                <span class="badge bg-success bg-opacity-10 text-success fw-normal">Sudah Dibaca</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary fw-normal">Belum Dibaca</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        <?php endif; ?>
                     </table>
                 </div>
+                <?php if (count($notifications) > 5): ?>
+                    <div class="card-footer bg-white border-top text-center p-3">
+                        <button class="btn btn-outline-maroon rounded-pill px-4 btn-sm fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNotifications" aria-expanded="false" aria-controls="collapseNotifications" onclick="this.innerHTML = this.innerHTML.trim() === 'Sembunyikan' ? 'Tampilkan Lebih Banyak' : 'Sembunyikan'">
+                            Tampilkan Lebih Banyak
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

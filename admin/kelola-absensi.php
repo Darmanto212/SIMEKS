@@ -56,8 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_absensi'])) {
             $stmt = $koneksi->prepare("UPDATE absensi SET status = ?, keterangan = ? WHERE id = ?");
             $stmt->execute([$status, $ket, $existing->id]);
         } else {
-            $stmt = $koneksi->prepare("INSERT INTO absensi (user_id, eskul_id, tanggal, status, keterangan) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$user_id, $eskul_id, $tanggal, $status, $ket]);
+            // Fetch active period ID
+            $stmt_p = $koneksi->query("SELECT id FROM periode WHERE status = 'aktif' LIMIT 1");
+            $active_period = $stmt_p->fetch();
+            $active_period_id = $active_period ? $active_period->id : 1;
+            $dicatat_oleh = $_SESSION['user_id'] ?? null;
+
+            $stmt = $koneksi->prepare("INSERT INTO absensi (user_id, eskul_id, periode_id, status, dicatat_oleh, keterangan, tanggal) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$user_id, $eskul_id, $active_period_id, $status, $dicatat_oleh, $ket, $tanggal]);
         }
     }
     $success_msg = "Absensi berhasil disimpan!";

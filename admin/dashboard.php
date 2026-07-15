@@ -152,13 +152,13 @@ $admin = [
         include '../includes/admin_nav.php';
         ?>
 
-        <div class="container-fluid p-4">
+        <div class="container-fluid px-4 py-3">
             <!-- Welcome Alert -->
-            <div class="alert bg-white border-0 shadow-sm rounded-4 p-4 mb-4 animate__animated animate__fadeInDown text-dark">
+            <div class="alert bg-white border-0 shadow-sm rounded-4 p-3 mb-3 animate__animated animate__fadeInDown text-dark">
                 <div class="row align-items-center">
-                    <div class="col-md-9">
-                        <h3 class="fw-bold text-maroon">Selamat Datang, <?php echo htmlspecialchars($admin['nama']); ?>! 🚀</h3>
-                        <p class="text-muted mb-0">
+                    <div class="col-md-10">
+                        <h4 class="fw-bold text-maroon mb-1">Selamat Datang, <?php echo htmlspecialchars($admin['nama']); ?>! 🚀</h4>
+                        <p class="text-muted small mb-0">
                             <?php if ($is_admin): ?>
                                 Kelola informasi kegiatan ekstrakurikuler SMAN 2 Sukatani melalui dashboard ini secara terpadu.
                             <?php else: ?>
@@ -166,126 +166,183 @@ $admin = [
                             <?php endif; ?>
                         </p>
                     </div>
-                    <div class="col-md-3 text-end d-none d-md-block">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2345/2345152.png" width="100">
+                    <div class="col-md-2 text-end d-none d-md-block">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2345/2345152.png" width="60">
                     </div>
                 </div>
             </div>
 
             <!-- Stats Row -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+            <div class="row g-3 mb-3">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
                         <div class="d-flex align-items-center">
-                            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-4 me-3">
-                                <i class="fas fa-users fs-4"></i>
+                            <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-users fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 font-weight-bold"><?php echo $is_admin ? 'Total Siswa' : 'Total Anggota'; ?></h6>
-                                <h4 class="fw-bold mb-0"><?php echo number_format($total_siswa); ?></h4>
+                                <h6 class="text-muted extra-small mb-0 font-weight-bold"><?php echo $is_admin ? 'Total Siswa' : 'Total Anggota'; ?></h6>
+                                <h5 class="fw-bold mb-0"><?php echo number_format($total_siswa); ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
                         <div class="d-flex align-items-center">
-                            <div class="bg-success bg-opacity-10 text-success p-3 rounded-4 me-3">
-                                <i class="fas fa-running fs-4"></i>
+                            <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-running fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 font-weight-bold"><?php echo $is_admin ? 'Total Ekskul' : 'Eskul Binaan'; ?></h6>
-                                <h4 class="fw-bold mb-0 <?php echo !$is_admin ? 'fs-6' : ''; ?>"><?php echo $is_admin ? $total_eskul : htmlspecialchars($pembina_eskul_name ?: 'Belum Ditugaskan'); ?></h4>
+                                <h6 class="text-muted extra-small mb-0 font-weight-bold"><?php echo $is_admin ? 'Total Ekskul' : 'Eskul Binaan'; ?></h6>
+                                <h5 class="fw-bold mb-0 <?php echo !$is_admin ? 'fs-6' : ''; ?>"><?php echo $is_admin ? $total_eskul : htmlspecialchars($pembina_eskul_name ?: 'Belum Ditugaskan'); ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
                         <div class="d-flex align-items-center">
-                            <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-4 me-3">
-                                <i class="fas fa-file-invoice fs-4"></i>
+                            <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-file-invoice fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 font-weight-bold">Pendaftar Baru</h6>
-                                <h4 class="fw-bold mb-0"><?php echo $pendaftar_baru; ?></h4>
+                                <h6 class="text-muted extra-small mb-0 font-weight-bold">Pendaftar Baru</h6>
+                                <h5 class="fw-bold mb-0"><?php echo $pendaftar_baru; ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
                         <div class="d-flex align-items-center">
-                            <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-4 me-3">
-                                <i class="fas fa-trophy fs-4"></i>
+                            <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-trophy fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 font-weight-bold">Total Prestasi</h6>
-                                <h4 class="fw-bold mb-0"><?php echo $total_prestasi; ?></h4>
+                                <h6 class="text-muted extra-small mb-0 font-weight-bold">Total Prestasi</h6>
+                                <h5 class="fw-bold mb-0"><?php echo $total_prestasi; ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Row -->
-            <div class="row g-4 mb-4">
-                <div class="<?php echo $is_admin ? 'col-lg-7' : 'col-lg-12'; ?>">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <h5 class="fw-bold mb-4">Tren Pendaftaran (7 Hari Terakhir)</h5>
-                        <canvas id="trendChart" style="max-height: 300px;"></canvas>
+            <!-- Charts & Lists Row -->
+            <div class="row g-3 mb-3">
+                <!-- Tren Pendaftaran (All roles) -->
+                <div class="<?php echo $is_admin ? 'col-lg-7' : 'col-lg-6'; ?>">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <h6 class="fw-bold mb-3 text-dark">Tren Pendaftaran (7 Hari Terakhir)</h6>
+                        <canvas id="trendChart" style="max-height: 200px;"></canvas>
                     </div>
                 </div>
+
+                <!-- Ekskul Terpopuler (Admin only) -->
                 <?php if ($is_admin): ?>
                 <div class="col-lg-5">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <h5 class="fw-bold mb-4">Ekskul Terpopuler</h5>
-                        <canvas id="popularChart" style="max-height: 300px;"></canvas>
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <h6 class="fw-bold mb-3 text-dark">Ekskul Terpopuler</h6>
+                        <canvas id="popularChart" style="max-height: 200px;"></canvas>
                     </div>
                 </div>
                 <?php endif; ?>
-            </div>
 
-            <div class="row g-4">
-                <div class="<?php echo $is_admin ? 'col-lg-8' : 'col-lg-12'; ?>">
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold mb-0">Pendaftaran Terbaru</h5>
-                            <a href="kelola-pendaftaran.php" class="text-maroon small text-decoration-none fw-bold">Lihat Semua</a>
+                <!-- Pendaftaran Terbaru (Pembina only: side-by-side with Tren Pendaftaran) -->
+                <?php if (!$is_admin): ?>
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-dark">Pendaftaran Terbaru</h6>
+                            <a href="kelola-pendaftaran.php" class="text-maroon extra-small text-decoration-none fw-bold">Lihat Semua</a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle border-0 mb-0">
+                            <table class="table table-hover align-middle border-0 mb-0 table-sm">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="border-0 rounded-start">Nama Siswa</th>
-                                        <th class="border-0">Ekskul</th>
-                                        <th class="border-0">Tanggal</th>
-                                        <th class="border-0 rounded-end">Status</th>
+                                        <th class="border-0 rounded-start py-2">Nama Siswa</th>
+                                        <th class="border-0 py-2">Ekskul</th>
+                                        <th class="border-0 py-2">Tanggal</th>
+                                        <th class="border-0 rounded-end py-2">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($latest_pendaftaran)): ?>
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted py-4">Belum ada pendaftaran terbaru.</td>
+                                            <td colspan="4" class="text-center text-muted py-3 small">Belum ada pendaftaran terbaru.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($latest_pendaftaran as $row): ?>
                                             <tr>
-                                                <td>
+                                                <td class="py-2">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($row->nama); ?>&background=random" class="rounded-circle me-3" width="30">
-                                                        <span class="fw-bold text-dark"><?php echo htmlspecialchars($row->nama); ?></span>
+                                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($row->nama); ?>&background=random" class="rounded-circle me-2" width="24">
+                                                        <span class="fw-bold text-dark small"><?php echo htmlspecialchars($row->nama); ?></span>
                                                     </div>
                                                 </td>
-                                                <td><?php echo htmlspecialchars($row->nama_eskul); ?></td>
-                                                <td><?php echo date('d M Y', strtotime($row->tanggal_daftar)); ?></td>
-                                                <td>
+                                                <td class="py-2 small"><?php echo htmlspecialchars($row->nama_eskul); ?></td>
+                                                <td class="py-2 small"><?php echo date('d M Y', strtotime($row->tanggal_daftar)); ?></td>
+                                                <td class="py-2">
                                                     <?php
                                                     $badge_class = 'bg-warning-subtle text-warning';
                                                     if ($row->status == 'diterima') $badge_class = 'bg-success-subtle text-success';
                                                     if ($row->status == 'ditolak') $badge_class = 'bg-danger-subtle text-danger';
                                                     ?>
-                                                    <span class="badge <?php echo $badge_class; ?> px-3 rounded-pill text-capitalize"><?php echo $row->status; ?></span>
+                                                    <span class="badge <?php echo $badge_class; ?> px-2 rounded-pill text-capitalize extra-small"><?php echo $row->status; ?></span>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Second Row (Admin only: Pendaftaran Terbaru & Log Aktivitas Terbaru) -->
+            <?php if ($is_admin): ?>
+            <div class="row g-3">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-dark">Pendaftaran Terbaru</h6>
+                            <a href="kelola-pendaftaran.php" class="text-maroon extra-small text-decoration-none fw-bold">Lihat Semua</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle border-0 mb-0 table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="border-0 rounded-start py-2">Nama Siswa</th>
+                                        <th class="border-0 py-2">Ekskul</th>
+                                        <th class="border-0 py-2">Tanggal</th>
+                                        <th class="border-0 rounded-end py-2">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($latest_pendaftaran)): ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-3 small">Belum ada pendaftaran terbaru.</td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php foreach ($latest_pendaftaran as $row): ?>
+                                            <tr>
+                                                <td class="py-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($row->nama); ?>&background=random" class="rounded-circle me-2" width="24">
+                                                        <span class="fw-bold text-dark small"><?php echo htmlspecialchars($row->nama); ?></span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-2 small"><?php echo htmlspecialchars($row->nama_eskul); ?></td>
+                                                <td class="py-2 small"><?php echo date('d M Y', strtotime($row->tanggal_daftar)); ?></td>
+                                                <td class="py-2">
+                                                    <?php
+                                                    $badge_class = 'bg-warning-subtle text-warning';
+                                                    if ($row->status == 'diterima') $badge_class = 'bg-success-subtle text-success';
+                                                    if ($row->status == 'ditolak') $badge_class = 'bg-danger-subtle text-danger';
+                                                    ?>
+                                                    <span class="badge <?php echo $badge_class; ?> px-2 rounded-pill text-capitalize extra-small"><?php echo $row->status; ?></span>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -296,10 +353,9 @@ $admin = [
                     </div>
                 </div>
 
-                <?php if ($is_admin): ?>
                 <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <h5 class="fw-bold mb-4">Log Aktivitas Terbaru</h5>
+                    <div class="card border-0 shadow-sm rounded-4 p-3">
+                        <h6 class="fw-bold mb-3 text-dark">Log Aktivitas Terbaru</h6>
                         <?php if (empty($latest_logs)): ?>
                             <div class="text-center py-3 text-muted small">Belum ada aktivitas.</div>
                         <?php else: ?>
@@ -307,7 +363,7 @@ $admin = [
                                 <?php if ($index === 2): ?>
                                     <div class="collapse" id="collapseLogs">
                                 <?php endif; ?>
-                                <div class="d-flex mb-3">
+                                <div class="d-flex mb-2">
                                     <div class="flex-shrink-0 me-3 <?php
                                                                     if ($log->tipe == 'SUKSES') echo 'text-success';
                                                                     elseif ($log->tipe == 'BAHAYA') echo 'text-danger';
@@ -319,11 +375,11 @@ $admin = [
                                                         elseif ($log->tipe == 'BAHAYA') echo 'fa-triangle-exclamation';
                                                         elseif ($log->tipe == 'PERINGATAN') echo 'fa-shield-halved';
                                                         else echo 'fa-info-circle';
-                                                        ?>"></i>
+                                                        ?>" style="font-size: 0.85rem;"></i>
                                     </div>
                                     <div class="text-dark">
-                                        <p class="mb-0 small fw-bold"><?php echo htmlspecialchars($log->aktivitas); ?></p>
-                                        <p class="extra-small text-muted mb-0"><?php echo date('H:i', strtotime($log->tanggal)); ?> - <?php echo htmlspecialchars($log->keterangan); ?></p>
+                                        <p class="mb-0 extra-small fw-bold"><?php echo htmlspecialchars($log->aktivitas); ?></p>
+                                        <p class="extra-small text-muted mb-0" style="font-size: 0.65rem;"><?php echo date('H:i', strtotime($log->tanggal)); ?> - <?php echo htmlspecialchars($log->keterangan); ?></p>
                                     </div>
                                 </div>
                                 <?php if ($index === count($latest_logs) - 1 && $index >= 2): ?>
@@ -332,15 +388,15 @@ $admin = [
                             <?php endforeach; ?>
                         <?php endif; ?>
                         <?php if (count($latest_logs) > 2): ?>
-                            <button class="btn btn-outline-maroon w-100 rounded-pill small fw-bold mt-2 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogs" aria-expanded="false" aria-controls="collapseLogs" id="btnToggleLogs" onclick="this.innerHTML = this.innerHTML.trim() === 'Sembunyikan' ? 'Tampilkan Lebih Banyak' : 'Sembunyikan'">
+                            <button class="btn btn-outline-maroon w-100 rounded-pill extra-small fw-bold mt-1 mb-1 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogs" aria-expanded="false" aria-controls="collapseLogs" id="btnToggleLogs" onclick="this.innerHTML = this.innerHTML.trim() === 'Sembunyikan' ? 'Tampilkan Lebih Banyak' : 'Sembunyikan'" style="font-size: 0.7rem;">
                                 Tampilkan Lebih Banyak
                             </button>
                         <?php endif; ?>
-                        <a href="logs.php" class="btn btn-light w-100 rounded-pill small fw-bold text-muted mt-1" style="font-size: 0.75rem;">Audit Trail Selengkapnya</a>
+                        <a href="logs.php" class="btn btn-light w-100 rounded-pill extra-small fw-bold text-muted mt-1 py-1" style="font-size: 0.7rem;">Audit Trail Selengkapnya</a>
                     </div>
                 </div>
-                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

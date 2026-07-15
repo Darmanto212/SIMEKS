@@ -39,172 +39,122 @@ if ($is_admin) {
         ?>
 
         <div class="container-fluid p-4">
-            <div class="row g-4">
-                <!-- Report Type 1: Student List -->
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="bg-maroon bg-opacity-10 text-maroon p-3 rounded-circle me-3">
-                                <i class="fas fa-users fs-4"></i>
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1: Siswa & Absensi -->
+                <div class="<?php echo $is_admin ? 'col-lg-4' : 'col-lg-6'; ?>">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-maroon bg-opacity-10 text-maroon p-2 rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-users fs-5"></i>
                             </div>
-                            <h5 class="fw-bold mb-0 text-dark">Daftar Siswa per Ekskul</h5>
+                            <h6 class="fw-bold mb-0 text-dark">Siswa & Absensi</h6>
                         </div>
-                        <p class="text-muted small mb-4">Cetak daftar seluruh siswa yang terdaftar aktif dalam kegiatan ekstrakurikuler tertentu.</p>
+                        <p class="text-muted extra-small mb-3">Unduh daftar anggota aktif atau rekapitulasi kehadiran per ekstrakurikuler.</p>
                         
-                        <form action="cetak.php" target="_blank" method="GET">
-                            <input type="hidden" name="type" value="siswa">
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark">Pilih Ekstrakurikuler</label>
-                                <select name="id" id="eskul_id_select" class="form-select rounded-3" required>
-                                    <?php if ($is_admin): ?>
-                                        <option value="">-- Pilih Ekskul --</option>
-                                        <option value="all">Semua Ekskul</option>
-                                    <?php endif; ?>
-                                    <?php foreach ($eskul_list as $e): ?>
-                                        <option value="<?php echo $e->id; ?>"><?php echo htmlspecialchars($e->nama_eskul); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-maroon rounded-pill">
-                                    <i class="fas fa-print me-2"></i> Cetak PDF
-                                </button>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <button type="button" onclick="exportData('siswa', 'excel')" class="btn btn-outline-success w-100 rounded-pill small">
-                                            <i class="fas fa-file-excel me-1"></i> Excel
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" onclick="exportData('siswa', 'word')" class="btn btn-outline-primary w-100 rounded-pill small">
-                                            <i class="fas fa-file-word me-1"></i> Word
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                        <div class="mb-2">
+                            <label class="form-label extra-small fw-bold text-dark mb-1">Tipe Laporan</label>
+                            <select id="siswaReportType" class="form-select form-select-sm rounded-3" onchange="toggleSiswaOpt()">
+                                <option value="siswa">Daftar Anggota Ekskul</option>
+                                <option value="rekap_absensi">Rekapitulasi Kehadiran</option>
+                            </select>
+                        </div>
 
-                <!-- Report Type 2: Achievements -->
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-circle me-3">
-                                <i class="fas fa-trophy fs-4"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0 text-dark">Rekapitulasi Prestasi</h5>
+                        <div class="mb-3">
+                            <label class="form-label extra-small fw-bold text-dark mb-1">Pilih Ekstrakurikuler</label>
+                            <select id="siswaEskulId" class="form-select form-select-sm rounded-3">
+                                <?php if ($is_admin): ?>
+                                    <option value="" id="siswaOptPlaceholder">-- Pilih Ekskul --</option>
+                                    <option value="all" id="siswaOptAll">Semua Ekskul</option>
+                                <?php endif; ?>
+                                <?php foreach ($eskul_list as $e): ?>
+                                    <option value="<?php echo $e->id; ?>"><?php echo htmlspecialchars($e->nama_eskul); ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                        <p class="text-muted small mb-4">Cetak seluruh daftar prestasi dan penghargaan yang telah diraih oleh siswa SMAN 2 Sukatani.</p>
-                        
-                        <div class="mt-auto">
-                            <form action="cetak.php" target="_blank" method="GET">
-                                <input type="hidden" name="type" value="prestasi">
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-outline-maroon rounded-pill">
-                                        <i class="fas fa-print me-2"></i> Cetak PDF
+
+                        <div class="mt-auto d-grid gap-2">
+                            <button type="button" onclick="triggerSiswaLaporan('pdf')" class="btn btn-maroon btn-sm rounded-pill py-2 fw-bold">
+                                <i class="fas fa-print me-1"></i> Cetak PDF
+                            </button>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button" onclick="triggerSiswaLaporan('excel')" class="btn btn-outline-success btn-sm w-100 rounded-pill py-2 fw-bold">
+                                        <i class="fas fa-file-excel me-1"></i> Excel
                                     </button>
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <a href="export.php?type=prestasi&format=excel" class="btn btn-light w-100 rounded-pill small border text-dark">
-                                                <i class="fas fa-file-excel text-success me-1"></i> Excel
-                                            </a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="export.php?type=prestasi&format=word" class="btn btn-light w-100 rounded-pill small border text-dark">
-                                                <i class="fas fa-file-word text-primary me-1"></i> Word
-                                            </a>
-                                        </div>
-                                    </div>
                                 </div>
-                            </form>
+                                <div class="col-6">
+                                    <button type="button" onclick="triggerSiswaLaporan('word')" class="btn btn-outline-primary btn-sm w-100 rounded-pill py-2 fw-bold">
+                                        <i class="fas fa-file-word me-1"></i> Word
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Report Type 3: Eskul List -->
+                <!-- Card 2: Rekap Prestasi -->
+                <div class="<?php echo $is_admin ? 'col-lg-4' : 'col-lg-6'; ?>">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-trophy fs-5"></i>
+                            </div>
+                            <h6 class="fw-bold mb-0 text-dark">Rekap Prestasi</h6>
+                        </div>
+                        <p class="text-muted extra-small mb-4">Unduh rekapitulasi seluruh daftar prestasi siswa SMAN 2 Sukatani tingkat regional hingga nasional.</p>
+                        
+                        <div class="mt-auto d-grid gap-2">
+                            <a href="cetak.php?type=prestasi" target="_blank" class="btn btn-outline-maroon btn-sm rounded-pill py-2 fw-bold text-decoration-none text-center">
+                                <i class="fas fa-print me-1"></i> Cetak PDF
+                            </a>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a href="export.php?type=prestasi&format=excel" class="btn btn-light btn-sm w-100 rounded-pill py-2 fw-bold border text-dark text-decoration-none text-center">
+                                        <i class="fas fa-file-excel text-success me-1"></i> Excel
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="export.php?type=prestasi&format=word" class="btn btn-light btn-sm w-100 rounded-pill py-2 fw-bold border text-dark text-decoration-none text-center">
+                                        <i class="fas fa-file-word text-primary me-1"></i> Word
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Daftar Ekstrakurikuler (Admin only) -->
                 <?php if ($is_admin): ?>
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-3">
-                                <i class="fas fa-list-alt fs-4"></i>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-list-alt fs-5"></i>
                             </div>
-                            <h5 class="fw-bold mb-0 text-dark">Daftar Ekstrakurikuler</h5>
+                            <h6 class="fw-bold mb-0 text-dark">Daftar Ekskul</h6>
                         </div>
-                        <p class="text-muted small mb-4">Cetak daftar aktif seluruh ekstrakurikuler beserta pembina dan jadwal kegiatannya.</p>
+                        <p class="text-muted extra-small mb-4">Unduh rekap daftar ekstrakurikuler sekolah beserta pembina dan jadwal latihannya.</p>
                         
-                        <div class="mt-auto">
-                            <form action="cetak.php" target="_blank" method="GET">
-                                <input type="hidden" name="type" value="eskul">
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-outline-maroon rounded-pill">
-                                        <i class="fas fa-print me-2"></i> Cetak PDF
-                                    </button>
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <a href="export.php?type=eskul&format=excel" class="btn btn-light w-100 rounded-pill small border text-dark">
-                                                <i class="fas fa-file-excel text-success me-1"></i> Excel
-                                            </a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="export.php?type=eskul&format=word" class="btn btn-light w-100 rounded-pill small border text-dark">
-                                                <i class="fas fa-file-word text-primary me-1"></i> Word
-                                            </a>
-                                        </div>
-                                    </div>
+                        <div class="mt-auto d-grid gap-2">
+                            <a href="cetak.php?type=eskul" target="_blank" class="btn btn-outline-maroon btn-sm rounded-pill py-2 fw-bold text-decoration-none text-center">
+                                <i class="fas fa-print me-1"></i> Cetak PDF
+                            </a>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a href="export.php?type=eskul&format=excel" class="btn btn-light btn-sm w-100 rounded-pill py-2 fw-bold border text-dark text-decoration-none text-center">
+                                        <i class="fas fa-file-excel text-success me-1"></i> Excel
+                                    </a>
                                 </div>
-                            </form>
+                                <div class="col-6">
+                                    <a href="export.php?type=eskul&format=word" class="btn btn-light btn-sm w-100 rounded-pill py-2 fw-bold border text-dark text-decoration-none text-center">
+                                        <i class="fas fa-file-word text-primary me-1"></i> Word
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <?php endif; ?>
-
-                <!-- Report Type 4: Attendance Recap -->
-                <div class="col-lg-6">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="bg-info bg-opacity-10 text-info p-3 rounded-circle me-3">
-                                <i class="fas fa-calendar-check fs-4"></i>
-                            </div>
-                            <h5 class="fw-bold mb-0 text-dark">Rekapitulasi Kehadiran Siswa</h5>
-                        </div>
-                        <p class="text-muted small mb-4">Cetak rekapitulasi tingkat kehadiran siswa per ekstrakurikuler beserta persentase kehadirannya.</p>
-                        
-                        <form action="cetak.php" target="_blank" method="GET">
-                            <input type="hidden" name="type" value="rekap_absensi">
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark">Pilih Ekstrakurikuler</label>
-                                <select name="id" id="rekap_eskul_id_select" class="form-select rounded-3" required>
-                                    <?php if ($is_admin): ?>
-                                        <option value="">-- Pilih Ekskul --</option>
-                                    <?php endif; ?>
-                                    <?php foreach ($eskul_list as $e): ?>
-                                        <option value="<?php echo $e->id; ?>"><?php echo htmlspecialchars($e->nama_eskul); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-maroon rounded-pill">
-                                    <i class="fas fa-print me-2"></i> Cetak PDF
-                                </button>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <button type="button" onclick="exportData('rekap_absensi', 'excel')" class="btn btn-outline-success w-100 rounded-pill small">
-                                            <i class="fas fa-file-excel me-1"></i> Excel
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" onclick="exportData('rekap_absensi', 'word')" class="btn btn-outline-primary w-100 rounded-pill small">
-                                            <i class="fas fa-file-word me-1"></i> Word
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -216,18 +166,42 @@ if ($is_admin) {
         document.getElementById("wrapper").classList.toggle("toggled");
     });
 
-    function exportData(type, format) {
-        let selectId = 'eskul_id_select';
-        if (type === 'rekap_absensi') {
-            selectId = 'rekap_eskul_id_select';
+    function toggleSiswaOpt() {
+        const type = document.getElementById('siswaReportType').value;
+        const optPlaceholder = document.getElementById('siswaOptPlaceholder');
+        const optAll = document.getElementById('siswaOptAll');
+
+        if (optAll && optPlaceholder) {
+            if (type === 'rekap_absensi') {
+                optAll.style.display = 'none';
+                optPlaceholder.style.display = 'block';
+                if (document.getElementById('siswaEskulId').value === 'all') {
+                    document.getElementById('siswaEskulId').value = '';
+                }
+            } else {
+                optAll.style.display = 'block';
+            }
         }
-        const id = document.getElementById(selectId).value;
-        if (!id && (type === 'siswa' || type === 'rekap_absensi')) {
+    }
+
+    function triggerSiswaLaporan(format) {
+        const type = document.getElementById('siswaReportType').value;
+        const eskulId = document.getElementById('siswaEskulId').value;
+
+        if (!eskulId) {
             alert('Pilih ekstrakurikuler terlebih dahulu!');
             return;
         }
-        window.location.href = `export.php?type=${type}&format=${format}&id=${id}`;
+
+        if (format === 'pdf') {
+            window.open(`cetak.php?type=${type}&id=${eskulId}`, '_blank');
+        } else {
+            window.location.href = `export.php?type=${type}&format=${format}&id=${eskulId}`;
+        }
     }
+
+    // Run init
+    toggleSiswaOpt();
 </script>
 
 <?php include '../includes/footer.php'; ?>

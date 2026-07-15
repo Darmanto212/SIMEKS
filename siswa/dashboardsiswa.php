@@ -71,113 +71,102 @@ $user = [
         include '../includes/siswa_nav.php'; 
         ?>
 
-        <div class="container-fluid p-4">
+        <div class="container-fluid px-4 py-3">
             <!-- Welcome Alert -->
-            <div class="alert bg-white border-0 shadow-sm rounded-4 p-4 mb-4 animate__animated animate__fadeInDown">
+            <div class="alert bg-white border-0 shadow-sm rounded-4 p-3 mb-3 animate__animated animate__fadeInDown text-dark">
                 <div class="row align-items-center">
-                    <div class="col-md-9">
-                        <h3 class="fw-bold text-maroon">Halo, <?php echo $user['nama']; ?>! 👋</h3>
-                        <p class="text-muted mb-0">Selamat datang di sistem manajemen ekstrakurikuler. Jangan lupa cek jadwal latihan kamu minggu ini!</p>
+                    <div class="col-md-10">
+                        <h4 class="fw-bold text-maroon mb-1">Halo, <?php echo $user['nama']; ?>! 👋</h4>
+                        <p class="text-muted small mb-0">Selamat datang di sistem manajemen ekstrakurikuler. Jangan lupa cek jadwal latihan kamu minggu ini!</p>
                     </div>
-                    <div class="col-md-3 text-end d-none d-md-block">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3220/3220551.png" width="100">
+                    <div class="col-md-2 text-end d-none d-md-block">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3220/3220551.png" width="60">
                     </div>
                 </div>
             </div>
 
             <!-- Stats Row -->
-            <div class="row g-4 mb-4">
+            <div class="row g-3 mb-3">
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-maroon bg-opacity-10 text-maroon p-3 rounded-4 me-3">
-                                <i class="fas fa-running fs-4"></i>
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-maroon bg-opacity-10 text-maroon p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-running fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 fw-bold">Ekskul Aktif</h6>
-                                <h4 class="fw-bold mb-0"><?php echo $total_aktif; ?></h4>
+                                <h6 class="text-muted extra-small mb-0 fw-bold">Ekskul Aktif</h6>
+                                <h5 class="fw-bold mb-0"><?php echo $total_aktif; ?></h5>
                             </div>
                         </div>
-                        <p class="mb-0 small text-muted">
-                            <?php 
-                                if($total_aktif > 0) {
-                                    $names = array_map(fn($e) => $e->nama_eskul, $active_eskul);
-                                    echo htmlspecialchars(implode(", ", $names));
-                                } else {
-                                    echo "Belum ada ekskul aktif kamu ikuti";
-                                }
-                            ?>
-                        </p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 text-success p-3 rounded-4 me-3">
-                                <i class="fas fa-calendar-check fs-4"></i>
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-calendar-check fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 fw-bold">Status Kehadiran</h6>
-                                <h4 class="fw-bold mb-0"><?php echo $persen_hadir; ?>%</h4>
+                                <h6 class="text-muted extra-small mb-0 fw-bold">Status Kehadiran</h6>
+                                <h5 class="fw-bold mb-0"><?php echo $persen_hadir; ?>%</h5>
                             </div>
                         </div>
-                        <p class="mb-0 small text-muted text-truncate"><?php echo $real_hadir; ?> dari <?php echo $total_absen; ?> pertemuan tercatat</p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-4 me-3">
-                                <i class="fas fa-medal fs-4"></i>
+                    <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-medal fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="text-muted small mb-0 fw-bold">Prestasi Diraih</h6>
-                                <h4 class="fw-bold mb-0"><?php echo $total_prestasi; ?></h4>
+                                <h6 class="text-muted extra-small mb-0 fw-bold">Prestasi Diraih</h6>
+                                <h5 class="fw-bold mb-0"><?php echo $total_prestasi; ?></h5>
                             </div>
                         </div>
-                        <p class="mb-0 small text-muted text-truncate">Lihat detail di menu Prestasi</p>
                     </div>
                 </div>
             </div>
 
-            <div class="row g-4">
+            <!-- Row 1: Jadwal & Statistik Kehadiran -->
+            <div class="row g-3 mb-3">
                 <div class="col-lg-8">
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold mb-0">Jadwal Minggu Ini</h5>
-                            <a href="#" class="text-maroon small text-decoration-none fw-bold">Lihat Semua</a>
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-dark">Jadwal Minggu Ini</h6>
+                            <a href="#" class="text-maroon extra-small text-decoration-none fw-bold">Lihat Semua</a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle border-0">
+                            <table class="table table-hover align-middle border-0 mb-0 table-sm">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="border-0 rounded-start">Ekskul</th>
-                                        <th class="border-0">Hari</th>
-                                        <th class="border-0">Waktu</th>
-                                        <th class="border-0">Lokasi</th>
-                                        <th class="border-0 rounded-end">Status</th>
+                                        <th class="border-0 rounded-start py-2">Ekskul</th>
+                                        <th class="border-0 py-2">Hari</th>
+                                        <th class="border-0 py-2">Waktu</th>
+                                        <th class="border-0 py-2">Lokasi</th>
+                                        <th class="border-0 rounded-end py-2">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($active_eskul)): ?>
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted py-4">Kamu belum terdaftar di ekskul manapun.</td>
+                                            <td colspan="5" class="text-center text-muted py-4 small">Kamu belum terdaftar di ekskul manapun.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($active_eskul as $row): ?>
                                             <tr>
-                                                <td>
+                                                <td class="py-2">
                                                     <div class="d-flex align-items-center">
-                                                        <div class="bg-maroon bg-opacity-10 text-maroon p-2 rounded-3 me-3">
-                                                            <i class="fas fa-running"></i>
+                                                        <div class="bg-maroon bg-opacity-10 text-maroon p-1 rounded-2 me-2" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                                            <i class="fas fa-running extra-small" style="font-size: 0.8rem;"></i>
                                                         </div>
-                                                        <span class="fw-bold"><?php echo htmlspecialchars($row->nama_eskul); ?></span>
+                                                        <span class="fw-bold small text-dark"><?php echo htmlspecialchars($row->nama_eskul); ?></span>
                                                     </div>
                                                 </td>
-                                                <td><?php echo explode(", ", $row->jadwal)[0] ?? $row->jadwal; ?></td>
-                                                <td><?php echo explode(", ", $row->jadwal)[1] ?? '-'; ?></td>
-                                                <td><?php echo htmlspecialchars($row->lokasi); ?></td>
-                                                <td><span class="badge bg-success-subtle text-success px-3 rounded-pill text-capitalize"><?php echo $row->status; ?></span></td>
+                                                <td class="py-2 small"><?php echo explode(", ", $row->jadwal)[0] ?? $row->jadwal; ?></td>
+                                                <td class="py-2 small"><?php echo explode(", ", $row->jadwal)[1] ?? '-'; ?></td>
+                                                <td class="py-2 small"><?php echo htmlspecialchars($row->lokasi); ?></td>
+                                                <td class="py-2"><span class="badge bg-success-subtle text-success px-2 rounded-pill text-capitalize extra-small"><?php echo $row->status; ?></span></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -189,88 +178,96 @@ $user = [
                 
                 <div class="col-lg-4">
                     <!-- Attendance Chart Card -->
-                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                        <h5 class="fw-bold mb-4">Statistik Kehadiran</h5>
-                        <div style="height: 200px;">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <h6 class="fw-bold mb-3 text-dark">Statistik Kehadiran</h6>
+                        <div style="height: 120px;">
                             <canvas id="attendanceChart"></canvas>
                         </div>
-                        <div class="mt-3 text-center">
-                            <span class="badge bg-success-subtle text-success rounded-pill px-3">Hadir: <?php echo $real_hadir; ?></span>
-                            <span class="badge bg-danger-subtle text-danger rounded-pill px-3">Absen: <?php echo $total_absen - $real_hadir; ?></span>
+                        <div class="mt-2 text-center">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-2 extra-small">Hadir: <?php echo $real_hadir; ?></span>
+                            <span class="badge bg-danger-subtle text-danger rounded-pill px-2 extra-small">Absen: <?php echo $total_absen - $real_hadir; ?></span>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold mb-0">Pengumuman Terbaru</h5>
-                            <a href="pengumuman.php" class="text-maroon small text-decoration-none fw-bold">Lihat Semua</a>
+            <!-- Row 2: Pengumuman Terbaru & Status Pendaftaran -->
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-dark">Pengumuman Terbaru</h6>
+                            <a href="pengumuman.php" class="text-maroon extra-small text-decoration-none fw-bold">Lihat Semua</a>
                         </div>
                         
                         <?php if (empty($announcements)): ?>
                             <div class="text-center py-4 text-muted small">Belum ada pengumuman.</div>
                         <?php else: ?>
-                            <?php foreach ($announcements as $ann): ?>
+                            <?php foreach (array_slice($announcements, 0, 2) as $ann): ?>
                                 <?php 
                                     $badge = 'bg-info';
                                     if ($ann->kategori == 'PENTING') $badge = 'bg-danger';
                                     elseif ($ann->kategori == 'UPDATE') $badge = 'bg-success';
                                     elseif ($ann->kategori == 'EVENT') $badge = 'bg-primary';
                                 ?>
-                                <div class="mb-3 pb-3 border-bottom">
-                                    <span class="badge <?php echo $badge; ?> mb-2"><?php echo $ann->kategori; ?></span>
-                                    <p class="mb-1 fw-bold small"><?php echo htmlspecialchars($ann->judul); ?></p>
-                                    <p class="extra-small text-muted mb-0"><?php echo date('d M Y', strtotime($ann->tanggal_terbit)); ?></p>
+                                <div class="mb-2 pb-2 border-bottom">
+                                    <span class="badge <?php echo $badge; ?> extra-small mb-1" style="font-size: 0.65rem;"><?php echo $ann->kategori; ?></span>
+                                    <p class="mb-0 fw-bold small text-dark"><?php echo htmlspecialchars($ann->judul); ?></p>
+                                    <p class="extra-small text-muted mb-0" style="font-size: 0.65rem;"><?php echo date('d M Y', strtotime($ann->tanggal_terbit)); ?></p>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
                         
-                        <a href="pengumuman.php" class="btn btn-outline-maroon w-100 rounded-pill small fw-bold mt-2">Semua Informasi</a>
+                        <a href="pengumuman.php" class="btn btn-outline-maroon w-100 rounded-pill extra-small fw-bold mt-2 py-1" style="font-size: 0.7rem;">Semua Informasi</a>
                     </div>
+                </div>
 
+                <div class="col-lg-6">
                     <!-- Registration Status Card -->
-                    <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold mb-0">Status Pendaftaran</h5>
-                            <i class="fas fa-file-invoice text-muted"></i>
+                    <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-dark">Status Pendaftaran</h6>
+                            <i class="fas fa-file-invoice text-muted small"></i>
                         </div>
                         
                         <?php if (empty($all_registrations)): ?>
                             <div class="text-center py-4 text-muted small">Belum ada riwayat pendaftaran.</div>
                         <?php else: ?>
                             <div class="registration-timeline">
-                                <?php foreach (array_slice($all_registrations, 0, 3) as $reg): ?>
-                                    <div class="d-flex mb-3 pb-2 border-bottom">
+                                <?php foreach (array_slice($all_registrations, 0, 2) as $reg): ?>
+                                    <div class="d-flex mb-2 pb-2 border-bottom">
                                         <div class="me-3">
                                             <?php if ($reg->status == 'menunggu'): ?>
-                                                <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-circle">
-                                                    <i class="fas fa-clock"></i>
+                                                <div class="bg-warning bg-opacity-10 text-warning p-1 rounded-circle" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-clock extra-small" style="font-size: 0.75rem;"></i>
                                                 </div>
                                             <?php elseif ($reg->status == 'diterima'): ?>
-                                                <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle">
-                                                    <i class="fas fa-check"></i>
+                                                <div class="bg-success bg-opacity-10 text-success p-1 rounded-circle" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-check extra-small" style="font-size: 0.75rem;"></i>
                                                 </div>
                                             <?php else: ?>
-                                                <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-circle">
-                                                    <i class="fas fa-times"></i>
+                                                <div class="bg-danger bg-opacity-10 text-danger p-1 rounded-circle" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-times extra-small" style="font-size: 0.75rem;"></i>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
                                         <div>
-                                            <p class="mb-0 fw-bold small"><?php echo htmlspecialchars($reg->nama_eskul); ?></p>
+                                            <p class="mb-0 fw-bold small text-dark"><?php echo htmlspecialchars($reg->nama_eskul); ?></p>
                                             <span class="extra-small text-capitalize <?php 
                                                 if($reg->status == 'menunggu') echo 'text-warning';
                                                 elseif($reg->status == 'diterima') echo 'text-success';
                                                 else echo 'text-danger';
-                                            ?>"><?php echo $reg->status; ?></span>
+                                            ?>" style="font-size: 0.65rem;"><?php echo $reg->status; ?></span>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <a href="daftar-eskul.php" class="btn btn-light w-100 rounded-pill small fw-bold mt-2">Cek Eskul Lain</a>
+                        <a href="daftar-eskul.php" class="btn btn-light w-100 rounded-pill extra-small fw-bold mt-2 py-1" style="font-size: 0.7rem;">Cek Eskul Lain</a>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
