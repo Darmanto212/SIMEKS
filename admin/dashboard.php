@@ -174,9 +174,9 @@ $admin = [
 
             <!-- Stats Row -->
             <div class="row g-3 mb-3">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-6">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-users fs-5"></i>
                             </div>
@@ -187,9 +187,9 @@ $admin = [
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-6">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-running fs-5"></i>
                             </div>
@@ -200,9 +200,9 @@ $admin = [
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-6">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-file-invoice fs-5"></i>
                             </div>
@@ -213,9 +213,9 @@ $admin = [
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-3 col-6">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-trophy fs-5"></i>
                             </div>

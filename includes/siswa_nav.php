@@ -1,13 +1,13 @@
 <?php
 // Unified Student Top Navigation
 ?>
-<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm mb-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-3 px-md-4 shadow-sm mb-4">
     <div class="container-fluid">
         <div class="d-flex align-items-center">
             <button class="btn btn-outline-maroon me-3" id="menu-toggle">
                 <i class="fas fa-bars"></i>
             </button>
-            <h4 class="fw-bold mb-0 text-dark"><?php echo isset($navTitle) ? $navTitle : 'Dashboard Siswa'; ?></h4>
+            <h4 class="fw-bold mb-0 text-dark nav-title-text"><?php echo isset($navTitle) ? $navTitle : 'Dashboard Siswa'; ?></h4>
         </div>
         
         <div class="ms-auto d-flex align-items-center">

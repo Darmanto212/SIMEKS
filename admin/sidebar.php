@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div class="bg-maroon text-white shadow-lg" id="sidebar-wrapper" style="min-width: 280px; min-height: 100vh; position: relative;">
+<div class="bg-maroon text-white shadow-lg" id="sidebar-wrapper" style="min-width: 280px; min-height: 100vh;">
     <!-- Floating Sidebar Edge Toggle Button -->
     <button id="sidebar-toggle-btn" class="btn btn-maroon rounded-circle p-0 d-flex align-items-center justify-content-center" style="position: absolute; right: -15px; top: 100px; width: 30px; height: 30px; z-index: 1010; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
         <i class="fas fa-chevron-left" id="sidebar-toggle-icon" style="font-size: 0.8rem;"></i>

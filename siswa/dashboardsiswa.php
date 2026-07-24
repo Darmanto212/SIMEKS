@@ -87,9 +87,9 @@ $user = [
 
             <!-- Stats Row -->
             <div class="row g-3 mb-3">
-                <div class="col-md-4">
+                <div class="col-md-4 col-4">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-maroon bg-opacity-10 text-maroon p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-running fs-5"></i>
                             </div>
@@ -100,9 +100,9 @@ $user = [
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 col-4">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-success bg-opacity-10 text-success p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-calendar-check fs-5"></i>
                             </div>
@@ -113,9 +113,9 @@ $user = [
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 col-4">
                     <div class="card border-0 shadow-sm rounded-4 p-2 px-3 h-100 transition-hover">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center stats-card-container">
                             <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3 me-3" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-medal fs-5"></i>
                             </div>
